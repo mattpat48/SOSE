@@ -1,0 +1,83 @@
+@prefix : <http://example.org/tourism/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+:place_st_marks a :Place ;
+  :name "St. Mark's Basilica" ;
+  :category "Museum" ;
+  :location "Venice" ;
+  :rating 4.6 ;
+  :accessibilityScore 0.6 ;
+  :sustainabilityScore 0.7 ;
+  :crowding "Moderate" ;
+  dct:source "official" .
+
+:place_gondola_exp a :Place ;
+  :name "Gondola Experience" ;
+  :category "Experience" ;
+  :location "Venice" ;
+  :rating 4.4 ;
+  :accessibilityScore 0.8 ;
+  :sustainabilityScore 0.5 ;
+  :crowding "Moderate" ;
+  dct:source "operator" .
+
+:place_lagoon_reserve a :Place ;
+  :name "Lagoon Nature Reserve" ;
+  :category "Nature" ;
+  :location "Venice" ;
+  :rating 4.8 ;
+  :accessibilityScore 0.9 ;
+  :sustainabilityScore 0.95 ;
+  :crowding "Low" ;
+  dct:source "conservation" .
+
+:place_cafe_florian a :Place ;
+  :name "Café Florian" ;
+  :category "Restaurant" ;
+  :location "Venice" ;
+  :rating 4.1 ;
+  :accessibilityScore 0.2 ;
+  :sustainabilityScore 0.25 ;
+  :crowding "High" ;
+  dct:source "commercial" .
+
+:place_accademia a :Place ;
+  :name "Accademia Gallery" ;
+  :category "Gallery" ;
+  :location "Venice" ;
+  :rating 4.7 ;
+  :accessibilityScore 0.85 ;
+  :sustainabilityScore 0.8 ;
+  :crowding "Moderate" ;
+  dct:source "official" .
+
+:place_doge_palace a :Place ;
+  :name "Doge's Palace" ;
+  :category "Museum" ;
+  :location "Venice" ;
+  :rating 4.5 ;
+  :accessibilityScore 0.5 ;
+  :sustainabilityScore 0.6 ;
+  :crowding "High" ;
+  dct:source "official" .
+
+:place_rialto_bridge a :Place ;
+  :name "Rialto Bridge" ;
+  :category "Landmark" ;
+  :location "Venice" ;
+  :rating 4.2 ;
+  :accessibilityScore 0.3 ;
+  :sustainabilityScore 0.4 ;
+  :crowding "High" ;
+  dct:source "public" .
+
+:place_san_giorgio a :Place ;
+  :name "San Giorgio Maggiore" ;
+  :category "Island" ;
+  :location "Venice" ;
+  :rating 4.6 ;
+  :accessibilityScore 0.9 ;
+  :sustainabilityScore 0.85 ;
+  :crowding "Low" ;
+  dct:source "official" .

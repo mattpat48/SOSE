@@ -142,4 +142,21 @@ Contatti e riferimenti rapidi (per il repo)
 	- `backend-eaas/src/main/resources/policies/` (policy JSON)
 	- `frontend/src/` (UI components)
 
+Problema osservato durante l'esecuzione (nota operativa)
+-------------------------------------------------------
+- Data: 2026-05-19
+- Sintomo: dopo aver avviato i servizi con `run-all.sh` o `mvn spring-boot:run`, le richieste verso il DaaS (es. `GET /daas/api/places`) restituiscono errori di tipo `connection refused` oppure risposte vuote.
+- Possibili aree da controllare:
+	- Verificare che i servizi siano effettivamente in ascolto sulle porte attese (8080 e 8081). Vedi `ss -ltnp` o `lsof`.
+	- Controllare i log di avvio (`mvn spring-boot:run`) per errori di ApplicationContext o eccezioni che impediscono il bind del server (es. bean mancanti).
+	- Controllare che il dataset sia caricato e le query SPARQL costruite corrispondano ai predicati presenti in `dataset/tourism.ttl`.
+	- Verificare i mappatori DTO/JSON per errori di serializzazione che possono produrre payload vuoti.
+	- Controllare la sequenza di avvio: avviare prima EaaS, poi DaaS, quindi frontend.
+
+Suggerimenti rapidi per debug:
+	- Avviare ogni servizio in foreground e leggere i log (EaaS, DaaS separatamente).
+	- Eseguire una query SPARQL di prova direttamente via codice o creare un file `.rq` per testare ARQ.
+	- Controllare che `RestTemplate` e altri bean richiesti siano definiti (es. `RestTemplateConfig`).
+	- Se il problema persiste, raccogliere e allegare gli stacktrace dei log per analisi.
+
 Fine del file: questo documento è pensato per essere autoesplicativo per un altro sviluppatore o un chatbot che deve capire dove mettere mano.
