@@ -1,0 +1,31 @@
+# Backend
+backend-daas/target
+backend-daas/.classpath
+backend-daas/.project
+backend-daas/.settings
+backend-daas/data/
+backend-eaas/target
+backend-eaas/.classpath
+backend-eaas/.project
+backend-eaas/.settings
+
+# Frontend
+frontend/node_modules
+frontend/dist
+frontend/.vite
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*

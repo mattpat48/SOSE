@@ -1,0 +1,52 @@
+{
+  "policyId": "POLICY_PROVENANCE_001",
+  "policyName": "Data Provenance & Transparency Policy",
+  "version": "1.0",
+  "description": "Ensures recommendations are based on trustworthy, up-to-date data sources and maintains transparency about data origins",
+  "domain": "transparency",
+  "conditions": [
+    {
+      "field": "dataAgeSinceUpdate",
+      "operator": "greaterThan",
+      "value": 180,
+      "unit": "days",
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "field": "provenance",
+      "operator": "in",
+      "value": ["LinkedOpenData", "CulturalHeritage", "TouristBoard", "ConservationOrg"],
+      "riskLevel": "LOW"
+    },
+    {
+      "field": "provenance",
+      "operator": "in",
+      "value": ["CommunityReview", "UserGenerated"],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "field": "provenance",
+      "operator": "equals",
+      "value": "UnverifiedSource",
+      "riskLevel": "HIGH"
+    }
+  ],
+  "decision": {
+    "riskThreshold": "MEDIUM",
+    "action": {
+      "HIGH": {
+        "decision": "REJECT",
+        "explanation": "Data source is not trustworthy; recommendation requires verification from official or peer-reviewed sources"
+      },
+      "MEDIUM": {
+        "decision": "REVISE",
+        "explanation": "Data is outdated or from unverified source; verify current accessibility, sustainability status and operating hours before recommendation"
+      },
+      "LOW": {
+        "decision": "PROCEED",
+        "explanation": "Data from verified, authoritative source and recent; recommendation is based on reliable information"
+      }
+    }
+  },
+  "auditFields": ["provenance", "lastUpdatedOn", "dataSource"]
+}

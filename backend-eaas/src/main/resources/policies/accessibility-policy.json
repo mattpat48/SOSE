@@ -1,0 +1,45 @@
+{
+  "policyId": "POLICY_ACCESSIBILITY_001",
+  "policyName": "Accessibility Fairness Policy",
+  "version": "1.0",
+  "description": "Ensures recommendations prioritize accessible venues for users with mobility needs",
+  "domain": "accessibility",
+  "conditions": [
+    {
+      "field": "accessibility",
+      "operator": "equals",
+      "value": "NotWheelchairAccessible",
+      "riskLevel": "HIGH"
+    },
+    {
+      "field": "accessibility",
+      "operator": "equals",
+      "value": "PartiallyWheelchairAccessible",
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "field": "accessibility",
+      "operator": "equals",
+      "value": "WheelchairAccessible",
+      "riskLevel": "LOW"
+    }
+  ],
+  "decision": {
+    "riskThreshold": "MEDIUM",
+    "action": {
+      "HIGH": {
+        "decision": "REJECT",
+        "explanation": "Place is not wheelchair accessible; recommendation cannot proceed for users with mobility needs"
+      },
+      "MEDIUM": {
+        "decision": "REVISE",
+        "explanation": "Place has limited accessibility; suggest fully accessible alternative or plan accessibility assistance"
+      },
+      "LOW": {
+        "decision": "PROCEED",
+        "explanation": "Place meets accessibility requirements for wheelchair users"
+      }
+    }
+  },
+  "auditFields": ["accessibility", "ethicalRating", "crowdingLevel"]
+}

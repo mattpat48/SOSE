@@ -1,0 +1,63 @@
+{
+  "policyId": "POLICY_SUSTAINABILITY_001",
+  "policyName": "Sustainability & Over-Tourism Policy",
+  "version": "1.0",
+  "description": "Prevents recommendations that contribute to over-tourism or unsustainable practices",
+  "domain": "sustainability",
+  "conditions": [
+    {
+      "field": "crowdingLevel",
+      "operator": "equals",
+      "value": "VeryHigh",
+      "riskLevel": "HIGH"
+    },
+    {
+      "field": "crowdingLevel",
+      "operator": "equals",
+      "value": "High",
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "field": "crowdingLevel",
+      "operator": "in",
+      "value": ["Low", "Medium"],
+      "riskLevel": "LOW"
+    },
+    {
+      "field": "hasSustainability",
+      "operator": "equals",
+      "value": "LowSustainability",
+      "riskLevel": "HIGH"
+    },
+    {
+      "field": "hasSustainability",
+      "operator": "equals",
+      "value": "ModeratelySustainable",
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "field": "hasSustainability",
+      "operator": "in",
+      "value": ["Sustainable", "HighlySustainable"],
+      "riskLevel": "LOW"
+    }
+  ],
+  "decision": {
+    "riskThreshold": "MEDIUM",
+    "action": {
+      "HIGH": {
+        "decision": "ESCALATE",
+        "explanation": "High over-tourism risk or low sustainability; requires manual review for sustainable alternatives or visit timing adjustments"
+      },
+      "MEDIUM": {
+        "decision": "REVISE",
+        "explanation": "Moderate crowding or sustainability concerns; recommend visiting during off-peak hours or suggest lower-impact alternatives"
+      },
+      "LOW": {
+        "decision": "PROCEED",
+        "explanation": "Location demonstrates sustainable practices and manageable crowding levels"
+      }
+    }
+  },
+  "auditFields": ["crowdingLevel", "hasSustainability", "ethicalRating"]
+}

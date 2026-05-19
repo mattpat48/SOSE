@@ -1,0 +1,208 @@
+@prefix ex: <http://tourism.example.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ===== CLASSES =====
+ex:Place a owl:Class ;
+    rdfs:label "Tourist Place" ;
+    rdfs:comment "A location that can be visited or is of interest to tourists" .
+
+ex:Museum a owl:Class ;
+    rdfs:subClassOf ex:Place .
+
+ex:Restaurant a owl:Class ;
+    rdfs:subClassOf ex:Place .
+
+ex:NaturalSite a owl:Class ;
+    rdfs:subClassOf ex:Place .
+
+ex:Landmark a owl:Class ;
+    rdfs:subClassOf ex:Place .
+
+ex:Location a owl:Class ;
+    rdfs:label "Geographic Location" .
+
+# ===== PROPERTIES =====
+ex:hasCategory a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range owl:Thing ;
+    rdfs:label "has category" .
+
+ex:belongsToLocation a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range ex:Location ;
+    rdfs:label "belongs to location" .
+
+ex:hasAccessibility a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range owl:Thing ;
+    rdfs:label "has accessibility feature" .
+
+ex:hasSustainability a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range owl:Thing ;
+    rdfs:label "sustainability rating" .
+
+ex:hasCrowdingLevel a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:label "crowding level" .
+
+ex:hasRating a owl:DatatypeProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range xsd:double ;
+    rdfs:label "rating" .
+
+ex:ethicalRating a owl:DatatypeProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range xsd:double ;
+    rdfs:label "ethical rating" .
+
+ex:lastUpdatedOn a owl:DatatypeProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "last updated" .
+
+# ===== INDIVIDUALS (Example Places) =====
+
+# Place 1: St. Mark's Basilica, Venice
+ex:place_stmarks a ex:Museum ;
+    rdfs:label "St. Mark's Basilica" ;
+    rdfs:comment "Historic basilica in Venice, iconic landmark and UNESCO World Heritage site" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.8 ;
+    ex:ethicalRating 4.2 ;
+    prov:wasAttributedTo ex:LinkedOpenData ;
+    ex:lastUpdatedOn "2024-05-15T10:30:00Z"^^xsd:dateTime .
+
+# Place 2: Gondola Ride, Venice (Accessible)
+ex:place_gondola a ex:Landmark ;
+    rdfs:label "Traditional Gondola Experience" ;
+    rdfs:comment "Scenic gondola ride through Venice canals with historic boatsmen" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:ModeratelySustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.5 ;
+    ex:ethicalRating 3.7 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-10T14:20:00Z"^^xsd:dateTime .
+
+# Place 3: Lagoon Nature Reserve
+ex:place_lagoon a ex:NaturalSite ;
+    rdfs:label "Venice Lagoon Nature Reserve" ;
+    rdfs:comment "Protected natural area with rich biodiversity and endemic species" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Low ;
+    ex:hasRating 4.3 ;
+    ex:ethicalRating 4.6 ;
+    prov:wasAttributedTo ex:ConservationOrg ;
+    ex:lastUpdatedOn "2024-05-12T09:15:00Z"^^xsd:dateTime .
+
+# Place 4: Florian Café, Venice (Luxury, not sustainable)
+ex:place_florian a ex:Restaurant ;
+    rdfs:label "Café Florian" ;
+    rdfs:comment "Historic café on St. Mark's Square with premium pricing and limited accessibility" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:NotWheelchairAccessible ;
+    ex:hasSustainability ex:LowSustainability ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.1 ;
+    ex:ethicalRating 2.8 ;
+    prov:wasAttributedTo ex:LinkedOpenData ;
+    ex:lastUpdatedOn "2024-05-14T11:45:00Z"^^xsd:dateTime .
+
+# Place 5: Accademia Gallery (Accessible)
+ex:place_accademia a ex:Museum ;
+    rdfs:label "Gallerie dell'Accademia" ;
+    rdfs:comment "Major art museum housing Venetian Renaissance works and masterpieces" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.6 ;
+    ex:ethicalRating 4.1 ;
+    prov:wasAttributedTo ex:CulturalHeritage ;
+    ex:lastUpdatedOn "2024-05-13T08:00:00Z"^^xsd:dateTime .
+
+# Place 6: Doge's Palace
+ex:place_doges a ex:Landmark ;
+    rdfs:label "Doge's Palace" ;
+    rdfs:comment "Former residence of the Doge with intricate Gothic architecture" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.7 ;
+    ex:ethicalRating 4.0 ;
+    prov:wasAttributedTo ex:LinkedOpenData ;
+    ex:lastUpdatedOn "2024-05-16T12:00:00Z"^^xsd:dateTime .
+
+# Place 7: Rialto Bridge Area
+ex:place_rialto a ex:Landmark ;
+    rdfs:label "Rialto Bridge and Market" ;
+    rdfs:comment "Famous bridge with traditional market district, extremely crowded in peak season" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:NotWheelchairAccessible ;
+    ex:hasSustainability ex:LowSustainability ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.2 ;
+    ex:ethicalRating 2.5 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-11T16:30:00Z"^^xsd:dateTime .
+
+# Place 8: San Giorgio Maggiore
+ex:place_sangio a ex:Church ;
+    rdfs:label "San Giorgio Maggiore" ;
+    rdfs:comment "Elegant church on island with accessible ferry and panoramic views" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Low ;
+    ex:hasRating 4.4 ;
+    ex:ethicalRating 4.5 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-14T10:15:00Z"^^xsd:dateTime .
+
+# ===== LOCATIONS =====
+ex:Venice a ex:Location ;
+    rdfs:label "Venice" ;
+    rdfs:comment "Historic city in northeastern Italy, capital of Veneto region" .
+
+# ===== ACCESSIBILITY VALUES =====
+ex:WheelchairAccessible rdfs:label "Wheelchair Accessible" .
+ex:PartiallyWheelchairAccessible rdfs:label "Partially Wheelchair Accessible" .
+ex:NotWheelchairAccessible rdfs:label "Not Wheelchair Accessible" .
+
+# ===== SUSTAINABILITY VALUES =====
+ex:HighlySustainable rdfs:label "Highly Sustainable" .
+ex:Sustainable rdfs:label "Sustainable" .
+ex:ModeratelySustainable rdfs:label "Moderately Sustainable" .
+ex:LowSustainability rdfs:label "Low Sustainability" .
+
+# ===== CROWDING LEVELS =====
+ex:Low rdfs:label "Low" .
+ex:Medium rdfs:label "Medium" .
+ex:High rdfs:label "High" .
+ex:VeryHigh rdfs:label "Very High" .
+
+# ===== PROVENANCE SOURCES =====
+ex:LinkedOpenData rdfs:label "Linked Open Data" .
+ex:TouristBoard rdfs:label "Official Tourist Board" .
+ex:ConservationOrg rdfs:label "Conservation Organization" .
+ex:CulturalHeritage rdfs:label "Cultural Heritage Database" .
+ex:CommunityReview rdfs:label "Community Review" .
