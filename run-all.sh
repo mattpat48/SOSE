@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Build and run all services: backend-eaas, backend-daas, frontend (dev)
 # Usage: ./run-all.sh
+echo "Starting SOSE services (EaaS, DaaS, Frontend)..."
 
 set -e
 
