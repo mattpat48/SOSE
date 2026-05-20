@@ -8,7 +8,7 @@
     <main class="app-main">
       <div class="container">
         <!-- Search Form Section -->
-        <SearchForm @search="handleSearch" />
+        <SearchForm @search-basic="handleBasicSearch" @search-ethical="handleEthicalSearch" />
 
         <!-- Results Section -->
         <div v-if="showResults" class="results-section">
@@ -70,18 +70,17 @@ export default {
     }
   },
   methods: {
-    async handleSearch(criteria) {
+    async handleBasicSearch(criteria) {
       this.loading = true
       this.error = null
       this.selectedPlace = null
       this.ethicalDecision = null
 
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/places/search/multi-criteria`, {
+        const response = await axios.get(`${API_BASE_URL}/api/places/search/basic`, {
           params: {
+            location: criteria.location,
             category: criteria.category,
-            accessibility: criteria.accessibility,
-            sustainability: criteria.sustainability,
             minRating: criteria.minRating
           }
         })
@@ -93,6 +92,37 @@ export default {
         }
       } catch (err) {
         this.error = 'Error fetching places: ' + (err.response?.data?.message || err.message)
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async handleEthicalSearch(criteria) {
+      this.loading = true
+      this.error = null
+      this.selectedPlace = null
+      this.ethicalDecision = null
+
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/places/search/ethical`, {
+          params: {
+            location: criteria.location,
+            category: criteria.category,
+            accessibility: criteria.accessibility,
+            sustainability: criteria.sustainability,
+            minRating: criteria.minRating
+          }
+        })
+
+        this.places = response.data
+        this.showResults = true
+
+        if (this.places.length === 0) {
+          this.error = 'No places found matching your ethical criteria'
+        }
+      } catch (err) {
+        this.error = 'Error fetching ethically filtered places: ' + (err.response?.data?.message || err.message)
         console.error(err)
       } finally {
         this.loading = false

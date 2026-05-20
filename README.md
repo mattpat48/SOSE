@@ -149,9 +149,15 @@ Suggerimento: se vuoi, posso aggiungere uno script `run-all.sh` che avvia i tre 
 
 ### DaaS Endpoints
 
+- `GET /api/places` - List all places in JSON format
+- `GET /api/places/health` - Health check for DaaS
 - `GET /api/places/search/location/{location}` - Filter places by location
 - `GET /api/places/search/category/{category}` - Filter places by category
 - `GET /api/places/{id}` - Get place details
+- `GET /api/places/search/basic` - Tourism search by city, category and minimum rating
+  - Query params: `location`, `category`, `minRating`
+- `GET /api/places/search/ethical` - Optional ethical pre-filtering search
+  - Query params: `location`, `category`, `accessibility`, `sustainability`, `minRating`
 - `GET /api/places/search/multi-criteria` - Advanced search with multiple filters
   - Query params: `category`, `accessibility`, `sustainability`, `minRating`
 - `POST /api/recommendations/ethical-recommendation` - Get ethically evaluated recommendation
@@ -163,19 +169,30 @@ Suggerimento: se vuoi, posso aggiungere uno script `run-all.sh` che avvia i tre 
 
 ## Demo Scenarios
 
-### Scenario 1: PROCEED (Positive Recommendation)
+### Scenario 1: PROCEED or REVISE (Positive Recommendation)
 **Request:**
 ```bash
-curl -X GET "http://localhost:8080/daas/api/places/search/multi-criteria?category=Museum&accessibility=WheelchairAccessible&sustainability=Sustainable&minRating=4.0"
+curl -X GET "http://localhost:8080/daas/api/places/search/basic?location=Venice&category=Museum&minRating=4.0"
 ```
-**Result:** Accademia Gallery → All policies PASS → Decision: **PROCEED**
+**Result:** Accademia Gallery → DaaS returns candidate places, then EaaS evaluates accessibility/provenance/sustainability → Decision: **PROCEED** or **REVISE** depending on the selected candidate.
 
-### Scenario 2: REJECT (Ethical Concerns)
+### Scenario 2: ESCALATE or REJECT (Ethical Concerns)
 **Request:**
 ```bash
-curl -X GET "http://localhost:8080/daas/api/places/search/multi-criteria?category=Restaurant&accessibility=NotWheelchairAccessible&sustainability=LowSustainability&minRating=4.0"
+curl -X GET "http://localhost:8080/daas/api/places/search/ethical?location=Venice&category=Restaurant&accessibility=NotWheelchairAccessible&sustainability=LowSustainability&minRating=4.0"
 ```
-**Result:** Café Florian → Accessibility & Sustainability policies FAIL → Decision: **REJECT**
+**Result:** Café Florian or Rialto Bridge → accessibility and crowding/sustainability concerns → Decision: **ESCALATE** or **REJECT**.
+
+### Example Audit Trace
+
+The EaaS response includes:
+- `decision` and `riskLevel`
+- `rationale`
+- `appliedPolicies`
+- `auditTrail`
+- `evaluationId`
+
+This satisfies the requirement for a traceable governance decision separate from case analysis.
 
 ## Policies
 
@@ -209,10 +226,20 @@ See [dataset/README.md](dataset/README.md) for detailed ontology documentation.
 
 ## Frontend Features
 
-- **Search Form**: Filter places by category, accessibility, sustainability, and rating
+- **Search Form**: Main search by city, category, and rating, plus an optional ethical filter section
 - **Place List**: Browse search results with key attributes
 - **Place Detail**: View detailed information and request ethical evaluation
 - **Ethical Decision Display**: See evaluation result with rationale, applied policies, and audit trail
+
+## Coverage vs. Homework Requirements
+
+- RDF dataset adapted for tourism domain: yes
+- REST endpoints: more than 5 meaningful endpoints: yes
+- SPARQL queries, JSON output, separation of concerns: yes
+- External JSON policies: 3 policies in `backend-eaas/src/main/resources/policies/`: yes
+- Example requests for positive and negative cases: yes
+- Audit trace and decision explanation: yes
+- Working client showing DaaS + EaaS interaction: yes
 
 ## Development Notes
 
@@ -236,8 +263,11 @@ See [dataset/README.md](dataset/README.md) for detailed ontology documentation.
 # List places
 curl http://localhost:8080/daas/api/places
 
-# Search by category
-curl "http://localhost:8080/daas/api/places/search/category/Museum"
+# Basic tourism search by city, type and rating
+curl "http://localhost:8080/daas/api/places/search/basic?location=Venice&category=Museum&minRating=4.0"
+
+# Optional ethical pre-filtering search
+curl "http://localhost:8080/daas/api/places/search/ethical?location=Venice&category=Museum&accessibility=WheelchairAccessible&sustainability=Sustainable&minRating=4.0"
 
 # Get place details
 curl "http://localhost:8080/daas/api/places/place_accademia"

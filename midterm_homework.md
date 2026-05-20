@@ -1,20 +1,5 @@
-MIDTERM HOMEWORK A.Y. 2025/2026 
-As explained during the first introductory lecture of the course, the midterm homework is 
-compulsory and can score up to either 4 or 5 points maximum. The final test is also 
-compulsory, of course, and can score up to either 25 or 26 points maximum. Therefore, 
-the final score will be calculated as follows: 
-Final score = midterm homework score + final test score 
-The groups will have to present their midterm homework on Thursday, May 28, 2026: 
-- from 2:30 p.m. to 4:30 p.m. in room A.0.6, Coppito 1, Edificio Ricamo, and  
-- from 4:30 p.m. to 6:30 p.m. in the usual room A1.3, Blocco 0. 
- 
 This year the homework will be about Data as a Service and Ethics as a Service in a 
-Service-Oriented Application 
-The following description is not intended to impose a rigid structure or too many 
-constraints.  Its  purpose  is  to  guide  students  toward  the  aspects  they  should 
-consider while developing the project. Students are not required to address every 
-single point, but their willingness and ability to cover as many relevant aspects as 
-possible will certainly be taken into account in the evaluation. 
+Service-Oriented Application
 The  goal  of  this  homework  is  to  design  and  implement  a  small  service-oriented 
 application that integrates two concepts discussed in class: 
 - Data as a Service, that is, exposing data through reusable REST services. 

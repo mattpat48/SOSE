@@ -48,6 +48,27 @@ GET /places/search/category/{category}
 
 **Response**: Array of PlaceDTO objects
 
+#### 2b. List All Places
+```
+GET /places
+```
+**Description**: Return the full list of places as JSON
+
+**Response**: Array of PlaceDTO objects
+
+#### 2c. Health Check
+```
+GET /places/health
+```
+**Description**: Check if DaaS service is running
+
+**Response**:
+```json
+{
+  "status": "DaaS is running"
+}
+```
+
 #### 3. Get Place Details
 ```
 GET /places/{id}
@@ -77,6 +98,34 @@ GET /places/search/multi-criteria?category=Museum&accessibility=WheelchairAccess
 ```
 
 **Response**: Array of PlaceDTO objects matching all criteria
+
+#### 4b. Basic Tourism Search
+```
+GET /places/search/basic
+```
+**Description**: Main client search by city, category and minimum rating
+
+**Query Parameters**:
+- `location` (string, default: "Venice")
+- `category` (string, default: "Museum")
+- `minRating` (number, default: 4.0)
+
+**Response**: Array of PlaceDTO objects
+
+#### 4c. Ethical Search (Optional Pre-filter)
+```
+GET /places/search/ethical
+```
+**Description**: Search with ethical filters such as accessibility and sustainability
+
+**Query Parameters**:
+- `location` (string, default: "Venice")
+- `category` (string, default: "Museum")
+- `accessibility` (string, default: "WheelchairAccessible")
+- `sustainability` (string, default: "Sustainable")
+- `minRating` (number, default: 4.0)
+
+**Response**: Array of PlaceDTO objects
 
 #### 5. Get Ethical Recommendation (Integration Endpoint)
 ```
@@ -276,7 +325,12 @@ GET /evaluate/health
 
 ### Find all accessible museums with sustainable rating >= 4.0
 ```bash
-curl "http://localhost:8080/daas/api/places/search/multi-criteria?category=Museum&accessibility=WheelchairAccessible&sustainability=Sustainable&minRating=4.0"
+curl "http://localhost:8080/daas/api/places/search/ethical?location=Venice&category=Museum&accessibility=WheelchairAccessible&sustainability=Sustainable&minRating=4.0"
+```
+
+### Get a tourism shortlist by city, type and rating
+```bash
+curl "http://localhost:8080/daas/api/places/search/basic?location=Venice&category=Museum&minRating=4.0"
 ```
 
 ### Get recommendation for accessible, sustainable museum
@@ -286,7 +340,7 @@ curl -X POST http://localhost:8080/daas/api/recommendations/ethical-recommendati
   -d '{
     "category": "Museum",
     "accessibility": "WheelchairAccessible",
-    "sustainability": "HighlySustainable",
+    "sustainability": "Sustainable",
     "minRating": 4.0,
     "userContext": {
       "userId": "user_demo",
@@ -313,3 +367,37 @@ curl -X POST http://localhost:8081/eaas/api/evaluate \
 ```
 
 Expected decision: **REJECT** (Accessibility HIGH, Sustainability HIGH, Provenance HIGH)
+
+### Example request leading to PROCEED or REVISE
+```bash
+curl -X POST http://localhost:8080/daas/api/recommendations/ethical-recommendation \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category": "Museum",
+    "accessibility": "WheelchairAccessible",
+    "sustainability": "Sustainable",
+    "minRating": 4.0,
+    "userContext": {
+      "userId": "user_proceed",
+      "preferences": ["cultural", "accessible"],
+      "accessibilityNeeds": ["wheelchair"]
+    }
+  }'
+```
+
+### Example request leading to ESCALATE or REJECT
+```bash
+curl -X POST http://localhost:8080/daas/api/recommendations/ethical-recommendation \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category": "Restaurant",
+    "accessibility": "NotWheelchairAccessible",
+    "sustainability": "LowSustainability",
+    "minRating": 4.0,
+    "userContext": {
+      "userId": "user_reject",
+      "preferences": ["luxury"],
+      "accessibilityNeeds": ["wheelchair"]
+    }
+  }'
+```

@@ -59,9 +59,43 @@ public class PlaceController {
         );
     }
 
+    @GetMapping("/search/basic")
+    public ResponseEntity<List<PlaceDTO>> basicSearch(
+            @RequestParam(defaultValue = "Venice") String location,
+            @RequestParam(defaultValue = "Museum") String category,
+            @RequestParam(defaultValue = "4.0") Double minRating) {
+
+        log.info("GET /api/places/search/basic - location={}, category={}, minRating={}",
+            location, category, minRating);
+
+        return ResponseEntity.ok(queryService.searchBasic(location, category, minRating));
+    }
+
+    @GetMapping("/search/ethical")
+    public ResponseEntity<List<PlaceDTO>> ethicalSearch(
+            @RequestParam(defaultValue = "Venice") String location,
+            @RequestParam(defaultValue = "Museum") String category,
+            @RequestParam(defaultValue = "WheelchairAccessible") String accessibility,
+            @RequestParam(defaultValue = "Sustainable") String sustainability,
+            @RequestParam(defaultValue = "4.0") Double minRating) {
+
+        log.info("GET /api/places/search/ethical - location={}, category={}, accessibility={}, sustainability={}, minRating={}",
+            location, category, accessibility, sustainability, minRating);
+
+        return ResponseEntity.ok(
+            queryService.searchEthical(location, category, accessibility, sustainability, minRating)
+        );
+    }
+
     @GetMapping
+    public ResponseEntity<List<PlaceDTO>> getAllPlaces() {
+        log.info("GET /api/places");
+        return ResponseEntity.ok(queryService.listAllPlaces());
+    }
+
+    @GetMapping("/health")
     public ResponseEntity<String> healthCheck() {
-        log.info("Health check on /api/places");
+        log.info("GET /api/places/health");
         return ResponseEntity.ok("{\"status\": \"DaaS is running\"}");
     }
 

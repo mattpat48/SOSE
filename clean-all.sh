@@ -1,0 +1,1 @@
+rm -f .bash_profile .bashrc .profile .zprofile .zshrc .gitconfig .gitmodules .ripgreprc .mcp.json .mcp.json
