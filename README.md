@@ -143,8 +143,6 @@ Note di debug:
 - Se DaaS segnala errori di connessione verso EaaS, assicurati che EaaS sia avviato sulla porta corretta prima di lanciare DaaS.
 - Per cambiare la porta all'avvio: `java -jar target/...jar --server.port=8082` o con Maven: `mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8082`.
 
-Suggerimento: se vuoi, posso aggiungere uno script `run-all.sh` che avvia i tre componenti in modo coordinato.
-
 ## API Endpoints
 
 ### DaaS Endpoints
