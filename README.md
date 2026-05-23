@@ -220,7 +220,7 @@ The tourism dataset includes 8 example places in Venice:
 - Rialto Bridge (Not Accessible, High Crowding)
 - San Giorgio Maggiore (Accessible, Sustainable)
 
-See [dataset/README.md](dataset/README.md) for detailed ontology documentation.
+??? See [dataset/README.md](dataset/README.md) for detailed ontology documentation.
 
 ## Frontend Features
 
