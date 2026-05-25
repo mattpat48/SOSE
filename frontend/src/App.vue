@@ -115,7 +115,16 @@ export default {
           }
         })
 
-        this.places = response.data
+        this.places = response.data.map(place => {
+          let needsRevision = false;
+          if (criteria.accessibility === 'WheelchairAccessible' && place.accessibility === 'PartiallyWheelchairAccessible') {
+            needsRevision = true;
+          }
+          if ((criteria.sustainability === 'Sustainable' || criteria.sustainability === 'HighlySustainable') && place.sustainabilityLevel === 'ModeratelySustainable') {
+            needsRevision = true;
+          }
+          return { ...place, needsRevision };
+        })
         this.showResults = true
 
         if (this.places.length === 0) {

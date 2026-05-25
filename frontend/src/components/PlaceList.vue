@@ -9,10 +9,14 @@
         v-for="place in places" 
         :key="place.uri"
         class="place-card"
+        :class="{ 'needs-revision': place.needsRevision }"
         @click="selectPlace(place)"
       >
         <div class="place-header">
-          <h3>{{ place.name }}</h3>
+          <h3>
+            {{ place.name }}
+            <span v-if="place.needsRevision" class="revision-badge">⚠️ Needs Revision</span>
+          </h3>
           <span class="rating">⭐ {{ place.rating }}</span>
         </div>
 
@@ -109,6 +113,28 @@ export default {
 .place-header h3 {
   margin: 0;
   font-size: 1.3em;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.revision-badge {
+  font-size: 0.6em;
+  background: #fff3e0;
+  color: #e65100;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  border: 1px solid #ffe0b2;
+}
+
+.place-card.needs-revision {
+  border: 2px solid #ffb74d;
+}
+
+.place-card.needs-revision .place-header {
+  background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
 }
 
 .rating {

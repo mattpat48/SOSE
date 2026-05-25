@@ -133,6 +133,16 @@ public class TourismQueryService {
         log.debug("Searching ethical criteria: location={}, category={}, accessibility={}, sustainability={}, minRating={}",
             location, category, accessibility, sustainability, minRating);
 
+        String accFilter = "regex(str(?acc), '(/|#)(" + accessibility + ")$', 'i')";
+        if ("WheelchairAccessible".equalsIgnoreCase(accessibility)) {
+            accFilter = "regex(str(?acc), '(/|#)(WheelchairAccessible|PartiallyWheelchairAccessible)$', 'i')";
+        }
+
+        String sustFilter = "regex(str(?sust), '(/|#)(" + sustainability + ")$', 'i')";
+        if ("Sustainable".equalsIgnoreCase(sustainability) || "HighlySustainable".equalsIgnoreCase(sustainability)) {
+            sustFilter = "regex(str(?sust), '(/|#)(Sustainable|HighlySustainable|ModeratelySustainable)$', 'i')";
+        }
+
         String query = PREFIX +
             "SELECT ?place ?name ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
             "WHERE { " +
@@ -152,8 +162,8 @@ public class TourismQueryService {
             "  FILTER( " +
             "    regex(str(?locLabel), '" + location + "', 'i') && " +
             "    regex(str(?cat), '" + category + "', 'i') && " +
-            "    regex(str(?acc), '" + accessibility + "', 'i') && " +
-            "    regex(str(?sust), '" + sustainability + "', 'i') && " +
+            "    " + accFilter + " && " +
+            "    " + sustFilter + " && " +
             "    ?rating >= " + minRating + " " +
             "  ) " +
             "} ORDER BY DESC(?rating) LIMIT 100";
