@@ -12,10 +12,9 @@
     <description>Tourism application - Data as a Service component</description>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
-        <relativePath/>
+        <groupId>com.tourism</groupId>
+        <artifactId>sose-parent</artifactId>
+        <version>1.0.0</version>
     </parent>
 
     <properties>
@@ -25,6 +24,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.tourism</groupId>
+            <artifactId>shared-dto</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!-- Spring Boot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

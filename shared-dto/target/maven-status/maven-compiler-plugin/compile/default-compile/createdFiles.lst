@@ -1,0 +1,12 @@
+com\tourism\dto\EaasEvaluationResponse$EaasEvaluationResponseBuilder.class
+com\tourism\dto\EaasEvaluationRequest$EaasEvaluationRequestBuilder.class
+com\tourism\dto\EaasEvaluationResponse$AppliedPolicy$AppliedPolicyBuilder.class
+com\tourism\dto\EaasEvaluationResponse$AppliedPolicy.class
+com\tourism\dto\EaasEvaluationRequest.class
+com\tourism\dto\EaasEvaluationResponse$AuditTrail.class
+com\tourism\dto\EaasEvaluationRequest$UserContext$UserContextBuilder.class
+com\tourism\dto\PlaceDTO$PlaceDTOBuilder.class
+com\tourism\dto\EaasEvaluationRequest$UserContext.class
+com\tourism\dto\EaasEvaluationResponse$AuditTrail$AuditTrailBuilder.class
+com\tourism\dto\PlaceDTO.class
+com\tourism\dto\EaasEvaluationResponse.class

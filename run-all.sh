@@ -33,14 +33,9 @@ command -v node >/dev/null 2>&1 || fail "Node.js non trovato. Installa Node.js e
 
 # Build phase
 echo "======================================"
-echo "Building EaaS (backend-eaas)"
+echo "Building all Maven modules (shared-dto, EaaS, DaaS)"
 echo "======================================"
-(cd "$BASE_DIR/backend-eaas" && mvn clean package -q) || fail "EaaS build failed"
-
-echo "======================================"
-echo "Building DaaS (backend-daas)"
-echo "======================================"
-(cd "$BASE_DIR/backend-daas" && mvn clean package -q) || fail "DaaS build failed"
+(cd "$BASE_DIR" && mvn clean package -q) || fail "Maven build failed"
 
 echo "======================================"
 echo "Preparing Frontend"

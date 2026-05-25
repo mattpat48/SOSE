@@ -3,6 +3,7 @@ package com.tourism.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tourism.dto.EaasEvaluationRequest;
 import com.tourism.dto.EaasEvaluationResponse;
+import com.tourism.dto.PlaceDTO;
 import com.tourism.exception.PolicyLoadingException;
 import com.tourism.model.Policy;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +104,7 @@ public class PolicyEvaluationService {
         return response;
     }
 
-    private String evaluatePolicyConditions(Policy policy, EaasEvaluationRequest.PlaceDTO place,
+    private String evaluatePolicyConditions(Policy policy, PlaceDTO place,
                                            List<EaasEvaluationResponse.AuditTrail> auditTrail) {
         String highestRisk = "LOW";
 
@@ -128,7 +129,7 @@ public class PolicyEvaluationService {
         return highestRisk;
     }
 
-    private boolean evaluateCondition(Policy.Condition condition, EaasEvaluationRequest.PlaceDTO place) {
+    private boolean evaluateCondition(Policy.Condition condition, PlaceDTO place) {
         String field = condition.getField();
         if (field == null) return false;
 
@@ -173,7 +174,7 @@ public class PolicyEvaluationService {
         return 0;
     }
 
-    private Object getFieldValue(String field, EaasEvaluationRequest.PlaceDTO place) {
+    private Object getFieldValue(String field, PlaceDTO place) {
         switch (field) {
             case "accessibility":
                 return place.getAccessibility();
