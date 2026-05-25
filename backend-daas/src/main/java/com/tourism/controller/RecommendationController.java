@@ -46,6 +46,8 @@ public class RecommendationController {
                 return ResponseEntity.ok(
                     EthicalRecommendationResponse.builder()
                         .decision("REJECT")
+                        .riskLevel("HIGH")
+                        .placeName("Unknown")
                         .rationale("No matching places found for the specified criteria")
                         .build()
                 );
@@ -72,15 +74,10 @@ public class RecommendationController {
             // Step 3: Combine DaaS data with EaaS decision
             EthicalRecommendationResponse response = EthicalRecommendationResponse.builder()
                 .candidate(candidate)
+                .placeName(candidate.getName())
                 .decision(eaasResponse.getDecision())
                 .rationale(eaasResponse.getRationale())
-                .riskLevel(Double.parseDouble(
-                    switch(eaasResponse.getRiskLevel()) {
-                        case "HIGH" -> "0.8";
-                        case "MEDIUM" -> "0.5";
-                        default -> "0.2";
-                    }
-                ))
+                .riskLevel(eaasResponse.getRiskLevel())
                 .evaluationId(eaasResponse.getEvaluationId())
                 .appliedPolicies(eaasResponse.getAppliedPolicies().toArray(new EaasEvaluationResponse.AppliedPolicy[0]))
                 .auditTrail(eaasResponse.getAuditTrail().toArray(new EaasEvaluationResponse.AuditTrail[0]))
@@ -93,6 +90,8 @@ public class RecommendationController {
             return ResponseEntity.status(500).body(
                 EthicalRecommendationResponse.builder()
                     .decision("ERROR")
+                    .riskLevel("HIGH")
+                    .placeName("Unknown")
                     .rationale("An error occurred during recommendation evaluation: " + e.getMessage())
                     .build()
             );

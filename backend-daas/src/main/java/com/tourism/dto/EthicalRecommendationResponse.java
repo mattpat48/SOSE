@@ -13,9 +13,10 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EthicalRecommendationResponse {
     private PlaceDTO candidate;
+    private String placeName;
     private String decision;
     private String rationale;
-    private Double riskLevel;
+    private String riskLevel;
     private String evaluationId;
     private EaasEvaluationResponse.AppliedPolicy[] appliedPolicies;
     private EaasEvaluationResponse.AuditTrail[] auditTrail;
