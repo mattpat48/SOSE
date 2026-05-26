@@ -150,27 +150,30 @@ Represents geographic regions.
 ## Dataset Statistics
 
 ### Venues in Dataset
-| Place | Type | Location | Status |
-|-------|------|----------|--------|
-| St. Mark's Basilica | Museum | Venice | Partially Accessible, Sustainable |
-| Gondola Experience | Landmark | Venice | Fully Accessible, Moderate |
-| Lagoon Reserve | Nature Site | Venice | Fully Accessible, Highly Sustainable |
-| Café Florian | Restaurant | Venice | Not Accessible, Low Sustainability |
-| Accademia Gallery | Museum | Venice | Fully Accessible, Sustainable |
-| Doge's Palace | Landmark | Venice | Partially Accessible, Sustainable |
-| Rialto Bridge | Landmark | Venice | Not Accessible, Low Sustainability |
-| San Giorgio Maggiore | Landmark | Venice | Fully Accessible, Highly Sustainable |
+The operational backend dataset currently contains 42 places across 9 Italian destinations:
+
+| Location | Places | Coverage |
+|----------|--------|----------|
+| Venice | 9 | Museums, landmarks, restaurants, natural sites, church |
+| Rome | 4 | Museums, landmarks, restaurants, natural sites |
+| Florence | 4 | Museums, landmarks, natural sites, church |
+| Milan | 5 | Museums, landmarks, restaurants, natural sites, church |
+| Turin | 4 | Museums, landmarks, restaurants, natural sites |
+| Naples | 4 | Museums, landmarks, restaurants, natural sites |
+| Palermo | 4 | Landmarks, restaurants, natural sites, church |
+| Bologna | 4 | Museums, landmarks, restaurants, church |
+| Cinque Terre | 4 | Landmarks, restaurants, natural sites |
 
 ### Accessibility Distribution
-- Fully Accessible: 4 places (50%)
-- Partially Accessible: 2 places (25%)
-- Not Accessible: 2 places (25%)
+- Fully Accessible: 17 places
+- Partially Accessible: 17 places
+- Not Accessible: 8 places
 
 ### Sustainability Distribution
-- Highly Sustainable: 2 places (25%)
-- Sustainable: 3 places (37.5%)
-- Moderately Sustainable: 1 place (12.5%)
-- Low Sustainability: 2 places (25%)
+- Highly Sustainable: 9 places
+- Sustainable: 22 places
+- Moderately Sustainable: 6 places
+- Low Sustainability: 5 places
 
 ---
 
