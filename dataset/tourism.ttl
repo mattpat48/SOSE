@@ -1,333 +1,721 @@
-@prefix : <http://example.org/tourism/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix dct: <http://purl.org/dc/terms/> .
+@prefix ex: <http://tourism.example.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-:place_st_marks a :Place ;
-  :name "St. Mark's Basilica" ;
-  :category "Museum" ;
-  :location "Venice" ;
-  :rating 4.6 ;
-  :accessibilityScore 0.6 ;
-  :sustainabilityScore 0.7 ;
-  :crowding "Moderate" ;
-  dct:source "official" .
+# ===== CLASSES =====
+ex:Place a owl:Class ;
+    rdfs:label "Tourist Place" ;
+    rdfs:comment "A location that can be visited or is of interest to tourists" .
 
-:place_gondola_exp a :Place ;
-  :name "Gondola Experience" ;
-  :category "Experience" ;
-  :location "Venice" ;
-  :rating 4.4 ;
-  :accessibilityScore 0.8 ;
-  :sustainabilityScore 0.5 ;
-  :crowding "Moderate" ;
-  dct:source "operator" .
+ex:Museum a owl:Class ;
+    rdfs:subClassOf ex:Place .
 
-:place_lagoon_reserve a :Place ;
-  :name "Lagoon Nature Reserve" ;
-  :category "Nature" ;
-  :location "Venice" ;
-  :rating 4.8 ;
-  :accessibilityScore 0.9 ;
-  :sustainabilityScore 0.95 ;
-  :crowding "Low" ;
-  dct:source "conservation" .
+ex:Restaurant a owl:Class ;
+    rdfs:subClassOf ex:Place .
 
-:place_cafe_florian a :Place ;
-  :name "Café Florian" ;
-  :category "Restaurant" ;
-  :location "Venice" ;
-  :rating 4.1 ;
-  :accessibilityScore 0.2 ;
-  :sustainabilityScore 0.25 ;
-  :crowding "High" ;
-  dct:source "commercial" .
+ex:NaturalSite a owl:Class ;
+    rdfs:subClassOf ex:Place .
 
-:place_accademia a :Place ;
-  :name "Accademia Gallery" ;
-  :category "Gallery" ;
-  :location "Venice" ;
-  :rating 4.7 ;
-  :accessibilityScore 0.85 ;
-  :sustainabilityScore 0.8 ;
-  :crowding "Moderate" ;
-  dct:source "official" .
+ex:Landmark a owl:Class ;
+    rdfs:subClassOf ex:Place .
 
-:place_doge_palace a :Place ;
-  :name "Doge's Palace" ;
-  :category "Museum" ;
-  :location "Venice" ;
-  :rating 4.5 ;
-  :accessibilityScore 0.5 ;
-  :sustainabilityScore 0.6 ;
-  :crowding "High" ;
-  dct:source "official" .
+ex:Church a owl:Class ;
+    rdfs:subClassOf ex:Place .
 
-:place_rialto_bridge a :Place ;
-  :name "Rialto Bridge" ;
-  :category "Landmark" ;
-  :location "Venice" ;
-  :rating 4.2 ;
-  :accessibilityScore 0.3 ;
-  :sustainabilityScore 0.4 ;
-  :crowding "High" ;
-  dct:source "public" .
+ex:Location a owl:Class ;
+    rdfs:label "Geographic Location" .
 
-:place_san_giorgio a :Place ;
-  :name "San Giorgio Maggiore" ;
-  :category "Island" ;
-  :location "Venice" ;
-  :rating 4.6 ;
-  :accessibilityScore 0.9 ;
-  :sustainabilityScore 0.85 ;
-  :crowding "Low" ;
-  dct:source "official" .
+# ===== PROPERTIES =====
+ex:hasCategory a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range owl:Thing ;
+    rdfs:label "has category" .
 
-:place_brera a :Place ;
-  :name "Pinacoteca di Brera" ;
-  :category "Museum" ;
-  :location "Milan" ;
-  :rating 4.7 ;
-  :accessibilityScore 0.95 ;
-  :sustainabilityScore 0.78 ;
-  :crowding "Moderate" ;
-  dct:source "heritage" .
+ex:belongsToLocation a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range ex:Location ;
+    rdfs:label "belongs to location" .
 
-:place_milan_duomo a :Place ;
-  :name "Milan Cathedral" ;
-  :category "Church" ;
-  :location "Milan" ;
-  :rating 4.8 ;
-  :accessibilityScore 0.65 ;
-  :sustainabilityScore 0.72 ;
-  :crowding "Very High" ;
-  dct:source "official" .
+ex:hasAccessibility a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range owl:Thing ;
+    rdfs:label "has accessibility feature" .
 
-:place_sforza_castle a :Place ;
-  :name "Sforza Castle" ;
-  :category "Landmark" ;
-  :location "Milan" ;
-  :rating 4.6 ;
-  :accessibilityScore 0.9 ;
-  :sustainabilityScore 0.62 ;
-  :crowding "Moderate" ;
-  dct:source "linked-open-data" .
+ex:hasSustainability a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range owl:Thing ;
+    rdfs:label "sustainability rating" .
 
-:place_parco_sempione a :Place ;
-  :name "Parco Sempione" ;
-  :category "Nature" ;
-  :location "Milan" ;
-  :rating 4.5 ;
-  :accessibilityScore 0.92 ;
-  :sustainabilityScore 0.94 ;
-  :crowding "Moderate" ;
-  dct:source "conservation" .
+ex:hasCrowdingLevel a owl:ObjectProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:label "crowding level" .
 
-:place_navigli_restaurant a :Place ;
-  :name "Navigli Waterfront Restaurant" ;
-  :category "Restaurant" ;
-  :location "Milan" ;
-  :rating 4.3 ;
-  :accessibilityScore 0.86 ;
-  :sustainabilityScore 0.74 ;
-  :crowding "High" ;
-  dct:source "community" .
+ex:hasRating a owl:DatatypeProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range xsd:double ;
+    rdfs:label "rating" .
 
-:place_egyptian_museum a :Place ;
-  :name "Egyptian Museum" ;
-  :category "Museum" ;
-  :location "Turin" ;
-  :rating 4.8 ;
-  :accessibilityScore 0.96 ;
-  :sustainabilityScore 0.8 ;
-  :crowding "Moderate" ;
-  dct:source "heritage" .
+ex:ethicalRating a owl:DatatypeProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range xsd:double ;
+    rdfs:label "ethical rating" .
 
-:place_mole_antonelliana a :Place ;
-  :name "Mole Antonelliana" ;
-  :category "Landmark" ;
-  :location "Turin" ;
-  :rating 4.6 ;
-  :accessibilityScore 0.62 ;
-  :sustainabilityScore 0.7 ;
-  :crowding "High" ;
-  dct:source "official" .
+ex:lastUpdatedOn a owl:DatatypeProperty ;
+    rdfs:domain ex:Place ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "last updated" .
 
-:place_valentino_park a :Place ;
-  :name "Valentino Park" ;
-  :category "Nature" ;
-  :location "Turin" ;
-  :rating 4.5 ;
-  :accessibilityScore 0.94 ;
-  :sustainabilityScore 0.96 ;
-  :crowding "Low" ;
-  dct:source "conservation" .
+# ===== INDIVIDUALS (Example Places) =====
 
-:place_porta_palazzo_eatery a :Place ;
-  :name "Porta Palazzo Market Eatery" ;
-  :category "Restaurant" ;
-  :location "Turin" ;
-  :rating 4.2 ;
-  :accessibilityScore 0.58 ;
-  :sustainabilityScore 0.55 ;
-  :crowding "High" ;
-  dct:source "community" .
+# Place 1: St. Mark's Basilica, Venice
+ex:place_stmarks a ex:Museum ;
+    rdfs:label "St. Mark's Basilica" ;
+    rdfs:comment "Historic basilica in Venice, iconic landmark and UNESCO World Heritage site" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.8 ;
+    ex:ethicalRating 4.2 ;
+    prov:wasAttributedTo ex:LinkedOpenData ;
+    ex:lastUpdatedOn "2024-05-15T10:30:00Z"^^xsd:dateTime .
 
-:place_mann a :Place ;
-  :name "National Archaeological Museum of Naples" ;
-  :category "Museum" ;
-  :location "Naples" ;
-  :rating 4.7 ;
-  :accessibilityScore 0.9 ;
-  :sustainabilityScore 0.76 ;
-  :crowding "Moderate" ;
-  dct:source "heritage" .
+# Place 2: Gondola Ride, Venice (Accessible)
+ex:place_gondola a ex:Landmark ;
+    rdfs:label "Traditional Gondola Experience" ;
+    rdfs:comment "Scenic gondola ride through Venice canals with historic boatsmen" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:ModeratelySustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.5 ;
+    ex:ethicalRating 3.7 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-10T14:20:00Z"^^xsd:dateTime .
 
-:place_castel_ovo a :Place ;
-  :name "Castel dell'Ovo" ;
-  :category "Landmark" ;
-  :location "Naples" ;
-  :rating 4.6 ;
-  :accessibilityScore 0.64 ;
-  :sustainabilityScore 0.7 ;
-  :crowding "Moderate" ;
-  dct:source "linked-open-data" .
+# Place 3: Lagoon Nature Reserve
+ex:place_lagoon a ex:NaturalSite ;
+    rdfs:label "Venice Lagoon Nature Reserve" ;
+    rdfs:comment "Protected natural area with rich biodiversity and endemic species" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Low ;
+    ex:hasRating 4.3 ;
+    ex:ethicalRating 4.6 ;
+    prov:wasAttributedTo ex:ConservationOrg ;
+    ex:lastUpdatedOn "2024-05-12T09:15:00Z"^^xsd:dateTime .
 
-:place_vesuvius_trail a :Place ;
-  :name "Vesuvius National Park Trail" ;
-  :category "Nature" ;
-  :location "Naples" ;
-  :rating 4.6 ;
-  :accessibilityScore 0.2 ;
-  :sustainabilityScore 0.92 ;
-  :crowding "High" ;
-  dct:source "conservation" .
+# Place 4: Florian Café, Venice (Luxury, not sustainable)
+ex:place_florian a ex:Restaurant ;
+    rdfs:label "Café Florian" ;
+    rdfs:comment "Historic café on St. Mark's Square with premium pricing and limited accessibility" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:NotWheelchairAccessible ;
+    ex:hasSustainability ex:LowSustainability ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.1 ;
+    ex:ethicalRating 2.8 ;
+    prov:wasAttributedTo ex:LinkedOpenData ;
+    ex:lastUpdatedOn "2024-05-14T11:45:00Z"^^xsd:dateTime .
 
-:place_decumani_pizzeria a :Place ;
-  :name "Local Pizzeria Decumani" ;
-  :category "Restaurant" ;
-  :location "Naples" ;
-  :rating 4.5 ;
-  :accessibilityScore 0.55 ;
-  :sustainabilityScore 0.5 ;
-  :crowding "High" ;
-  dct:source "community" .
+# Place 5: Accademia Gallery (Accessible)
+ex:place_accademia a ex:Museum ;
+    rdfs:label "Gallerie dell'Accademia" ;
+    rdfs:comment "Major art museum housing Venetian Renaissance works and masterpieces" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.6 ;
+    ex:ethicalRating 4.1 ;
+    prov:wasAttributedTo ex:CulturalHeritage ;
+    ex:lastUpdatedOn "2024-05-13T08:00:00Z"^^xsd:dateTime .
 
-:place_palermo_cathedral a :Place ;
-  :name "Palermo Cathedral" ;
-  :category "Church" ;
-  :location "Palermo" ;
-  :rating 4.7 ;
-  :accessibilityScore 0.6 ;
-  :sustainabilityScore 0.72 ;
-  :crowding "High" ;
-  dct:source "official" .
+# Place 6: Doge's Palace
+ex:place_doges a ex:Landmark ;
+    rdfs:label "Doge's Palace" ;
+    rdfs:comment "Former residence of the Doge with intricate Gothic architecture" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.7 ;
+    ex:ethicalRating 4.0 ;
+    prov:wasAttributedTo ex:LinkedOpenData ;
+    ex:lastUpdatedOn "2024-05-16T12:00:00Z"^^xsd:dateTime .
 
-:place_norman_palace a :Place ;
-  :name "Norman Palace" ;
-  :category "Landmark" ;
-  :location "Palermo" ;
-  :rating 4.6 ;
-  :accessibilityScore 0.62 ;
-  :sustainabilityScore 0.75 ;
-  :crowding "Moderate" ;
-  dct:source "heritage" .
+# Place 7: Rialto Bridge Area
+ex:place_rialto a ex:Landmark ;
+    rdfs:label "Rialto Bridge and Market" ;
+    rdfs:comment "Famous bridge with traditional market district, extremely crowded in peak season" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:NotWheelchairAccessible ;
+    ex:hasSustainability ex:LowSustainability ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.2 ;
+    ex:ethicalRating 2.5 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-11T16:30:00Z"^^xsd:dateTime .
 
-:place_capo_market_kitchen a :Place ;
-  :name "Capo Market Kitchen" ;
-  :category "Restaurant" ;
-  :location "Palermo" ;
-  :rating 4.2 ;
-  :accessibilityScore 0.18 ;
-  :sustainabilityScore 0.28 ;
-  :crowding "Very High" ;
-  dct:source "unverified" .
+# Place 8: San Giorgio Maggiore
+ex:place_sangio a ex:Church ;
+    rdfs:label "San Giorgio Maggiore" ;
+    rdfs:comment "Elegant church on island with accessible ferry and panoramic views" ;
+    ex:hasCategory ex:Church ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Low ;
+    ex:hasRating 4.4 ;
+    ex:ethicalRating 4.5 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-14T10:15:00Z"^^xsd:dateTime .
 
-:place_favorita_park a :Place ;
-  :name "Favorita Park" ;
-  :category "Nature" ;
-  :location "Palermo" ;
-  :rating 4.3 ;
-  :accessibilityScore 0.62 ;
-  :sustainabilityScore 0.9 ;
-  :crowding "Low" ;
-  dct:source "conservation" .
+# Place 9: Hidden Canal Bar, Venice (unverified source - provenance REJECT)
+ex:place_hiddenbar a ex:Restaurant ;
+    rdfs:label "Hidden Canal Bar" ;
+    rdfs:comment "Unlisted bar promoted via unverified user posts; data reliability unknown" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:Venice ;
+    ex:hasAccessibility ex:NotWheelchairAccessible ;
+    ex:hasSustainability ex:LowSustainability ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.0 ;
+    ex:ethicalRating 2.0 ;
+    prov:wasAttributedTo ex:UnverifiedSource ;
+    ex:lastUpdatedOn "2023-01-05T00:00:00Z"^^xsd:dateTime .
 
-:place_mambo a :Place ;
-  :name "MAMbo Museum" ;
-  :category "Museum" ;
-  :location "Bologna" ;
-  :rating 4.4 ;
-  :accessibilityScore 0.93 ;
-  :sustainabilityScore 0.78 ;
-  :crowding "Low" ;
-  dct:source "heritage" .
+# Place 10: Colosseum, Rome
+ex:place_colosseum a ex:Landmark ;
+    rdfs:label "Colosseum" ;
+    rdfs:comment "Iconic ancient Roman amphitheatre, heavily visited year-round" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Rome ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.7 ;
+    ex:ethicalRating 3.6 ;
+    prov:wasAttributedTo ex:LinkedOpenData ;
+    ex:lastUpdatedOn "2024-05-18T09:00:00Z"^^xsd:dateTime .
 
-:place_san_luca a :Place ;
-  :name "Sanctuary of San Luca" ;
-  :category "Church" ;
-  :location "Bologna" ;
-  :rating 4.7 ;
-  :accessibilityScore 0.6 ;
-  :sustainabilityScore 0.73 ;
-  :crowding "Moderate" ;
-  dct:source "official" .
+# Place 11: Vatican Museums, Rome
+ex:place_vaticanmuseums a ex:Museum ;
+    rdfs:label "Vatican Museums" ;
+    rdfs:comment "World-renowned art collection including the Sistine Chapel" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Rome ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.8 ;
+    ex:ethicalRating 4.0 ;
+    prov:wasAttributedTo ex:CulturalHeritage ;
+    ex:lastUpdatedOn "2024-05-17T11:30:00Z"^^xsd:dateTime .
 
-:place_portico_walk a :Place ;
-  :name "Accessible Portico Walk" ;
-  :category "Landmark" ;
-  :location "Bologna" ;
-  :rating 4.5 ;
-  :accessibilityScore 0.95 ;
-  :sustainabilityScore 0.95 ;
-  :crowding "Moderate" ;
-  dct:source "official" .
+# Place 12: Villa Borghese Gardens, Rome
+ex:place_villaborghese a ex:NaturalSite ;
+    rdfs:label "Villa Borghese Gardens" ;
+    rdfs:comment "Large landscaped public park with accessible paths and low impact" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:Rome ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Low ;
+    ex:hasRating 4.6 ;
+    ex:ethicalRating 4.7 ;
+    prov:wasAttributedTo ex:ConservationOrg ;
+    ex:lastUpdatedOn "2024-05-15T08:45:00Z"^^xsd:dateTime .
 
-:place_quadrilatero_osteria a :Place ;
-  :name "Sustainable Osteria Quadrilatero" ;
-  :category "Restaurant" ;
-  :location "Bologna" ;
-  :rating 4.6 ;
-  :accessibilityScore 0.9 ;
-  :sustainabilityScore 0.82 ;
-  :crowding "Moderate" ;
-  dct:source "community" .
+# Place 13: Trastevere Trattoria, Rome
+ex:place_trastevere a ex:Restaurant ;
+    rdfs:label "Trastevere Trattoria" ;
+    rdfs:comment "Family-run trattoria with accessible entrance and local sourcing" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:Rome ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:ModeratelySustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.5 ;
+    ex:ethicalRating 4.0 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-16T19:20:00Z"^^xsd:dateTime .
 
-:place_monterosso_promenade a :Place ;
-  :name "Monterosso Accessible Promenade" ;
-  :category "Landmark" ;
-  :location "Cinque Terre" ;
-  :rating 4.5 ;
-  :accessibilityScore 0.85 ;
-  :sustainabilityScore 0.78 ;
-  :crowding "High" ;
-  dct:source "official" .
+# Place 14: Uffizi Gallery, Florence
+ex:place_uffizi a ex:Museum ;
+    rdfs:label "Uffizi Gallery" ;
+    rdfs:comment "Major Renaissance art museum with accessible routes and lifts" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Florence ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.8 ;
+    ex:ethicalRating 4.2 ;
+    prov:wasAttributedTo ex:CulturalHeritage ;
+    ex:lastUpdatedOn "2024-05-17T10:00:00Z"^^xsd:dateTime .
 
-:place_cinque_terre_marine a :Place ;
-  :name "Cinque Terre Marine Protected Area" ;
-  :category "Nature" ;
-  :location "Cinque Terre" ;
-  :rating 4.8 ;
-  :accessibilityScore 0.58 ;
-  :sustainabilityScore 0.97 ;
-  :crowding "Moderate" ;
-  dct:source "conservation" .
+# Place 15: Florence Cathedral (Duomo)
+ex:place_duomo a ex:Church ;
+    rdfs:label "Florence Cathedral" ;
+    rdfs:comment "Gothic cathedral with iconic Brunelleschi dome; very crowded" ;
+    ex:hasCategory ex:Church ;
+    ex:belongsToLocation ex:Florence ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.9 ;
+    ex:ethicalRating 3.8 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-18T12:10:00Z"^^xsd:dateTime .
 
-:place_vernazza_trail a :Place ;
-  :name "Vernazza Cliff Trail" ;
-  :category "Nature" ;
-  :location "Cinque Terre" ;
-  :rating 4.7 ;
-  :accessibilityScore 0.15 ;
-  :sustainabilityScore 0.55 ;
-  :crowding "Very High" ;
-  dct:source "community" .
+# Place 16: Ponte Vecchio, Florence (over-tourism, low sustainability)
+ex:place_pontevecchio a ex:Landmark ;
+    rdfs:label "Ponte Vecchio" ;
+    rdfs:comment "Medieval bridge lined with shops; congested and not accessible" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Florence ;
+    ex:hasAccessibility ex:NotWheelchairAccessible ;
+    ex:hasSustainability ex:LowSustainability ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.4 ;
+    ex:ethicalRating 2.9 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-12T15:00:00Z"^^xsd:dateTime .
 
-:place_harbor_seafood_coop a :Place ;
-  :name "Harbor Seafood Cooperative" ;
-  :category "Restaurant" ;
-  :location "Cinque Terre" ;
-  :rating 4.4 ;
-  :accessibilityScore 0.62 ;
-  :sustainabilityScore 0.8 ;
-  :crowding "Moderate" ;
-  dct:source "community" .
+# Place 17: Boboli Gardens, Florence
+ex:place_boboli a ex:NaturalSite ;
+    rdfs:label "Boboli Gardens" ;
+    rdfs:comment "Historic green park behind Pitti Palace with sustainable management" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:Florence ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.5 ;
+    ex:ethicalRating 4.5 ;
+    prov:wasAttributedTo ex:ConservationOrg ;
+    ex:lastUpdatedOn "2024-05-14T09:30:00Z"^^xsd:dateTime .
+
+# Place 18: Brera Art Gallery, Milan
+ex:place_brera a ex:Museum ;
+    rdfs:label "Pinacoteca di Brera" ;
+    rdfs:comment "Major art gallery in Milan with accessible museum routes and verified heritage data" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Milan ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.7 ;
+    ex:ethicalRating 4.3 ;
+    prov:wasAttributedTo ex:CulturalHeritage ;
+    ex:lastUpdatedOn "2024-05-19T09:10:00Z"^^xsd:dateTime .
+
+# Place 19: Milan Cathedral
+ex:place_milan_duomo a ex:Church ;
+    rdfs:label "Milan Cathedral" ;
+    rdfs:comment "Large Gothic cathedral with partial accessibility and high visitor concentration" ;
+    ex:hasCategory ex:Church ;
+    ex:belongsToLocation ex:Milan ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.8 ;
+    ex:ethicalRating 3.7 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-19T10:20:00Z"^^xsd:dateTime .
+
+# Place 20: Sforza Castle
+ex:place_sforza a ex:Landmark ;
+    rdfs:label "Sforza Castle" ;
+    rdfs:comment "Historic fortified complex with museums, courtyards and accessible public areas" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Milan ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:ModeratelySustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.6 ;
+    ex:ethicalRating 4.0 ;
+    prov:wasAttributedTo ex:LinkedOpenData ;
+    ex:lastUpdatedOn "2024-05-18T16:45:00Z"^^xsd:dateTime .
+
+# Place 21: Navigli Waterfront Restaurant
+ex:place_navigli_restaurant a ex:Restaurant ;
+    rdfs:label "Navigli Waterfront Restaurant" ;
+    rdfs:comment "Canal-side restaurant with step-free access and local sourcing program" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:Milan ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.3 ;
+    ex:ethicalRating 4.1 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-20T12:00:00Z"^^xsd:dateTime .
+
+# Place 22: Parco Sempione
+ex:place_parco_sempione a ex:NaturalSite ;
+    rdfs:label "Parco Sempione" ;
+    rdfs:comment "Central urban park with accessible paths, public transit access and low-impact visit profile" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:Milan ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.5 ;
+    ex:ethicalRating 4.6 ;
+    prov:wasAttributedTo ex:ConservationOrg ;
+    ex:lastUpdatedOn "2024-05-19T07:30:00Z"^^xsd:dateTime .
+
+# Place 23: Egyptian Museum, Turin
+ex:place_egyptian_museum a ex:Museum ;
+    rdfs:label "Egyptian Museum" ;
+    rdfs:comment "Specialized archaeological museum with accessible routes and strong curatorial provenance" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Turin ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.8 ;
+    ex:ethicalRating 4.4 ;
+    prov:wasAttributedTo ex:CulturalHeritage ;
+    ex:lastUpdatedOn "2024-05-20T09:00:00Z"^^xsd:dateTime .
+
+# Place 24: Mole Antonelliana
+ex:place_mole_antonelliana a ex:Landmark ;
+    rdfs:label "Mole Antonelliana" ;
+    rdfs:comment "Symbolic tower of Turin with lift access and high visitor demand" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Turin ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.6 ;
+    ex:ethicalRating 3.9 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-20T11:25:00Z"^^xsd:dateTime .
+
+# Place 25: Valentino Park
+ex:place_valentino_park a ex:NaturalSite ;
+    rdfs:label "Valentino Park" ;
+    rdfs:comment "Riverside public park with broad accessible paths and strong low-impact profile" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:Turin ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Low ;
+    ex:hasRating 4.5 ;
+    ex:ethicalRating 4.7 ;
+    prov:wasAttributedTo ex:ConservationOrg ;
+    ex:lastUpdatedOn "2024-05-18T08:30:00Z"^^xsd:dateTime .
+
+# Place 26: Porta Palazzo Market Eatery
+ex:place_porta_palazzo_eatery a ex:Restaurant ;
+    rdfs:label "Porta Palazzo Market Eatery" ;
+    rdfs:comment "Market restaurant using local suppliers, with partial accessibility during busy hours" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:Turin ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:ModeratelySustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.2 ;
+    ex:ethicalRating 3.6 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-19T13:45:00Z"^^xsd:dateTime .
+
+# Place 27: National Archaeological Museum, Naples
+ex:place_mann a ex:Museum ;
+    rdfs:label "National Archaeological Museum of Naples" ;
+    rdfs:comment "Archaeological museum with extensive collections and verified accessibility information" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Naples ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.7 ;
+    ex:ethicalRating 4.2 ;
+    prov:wasAttributedTo ex:CulturalHeritage ;
+    ex:lastUpdatedOn "2024-05-20T08:00:00Z"^^xsd:dateTime .
+
+# Place 28: Castel dell'Ovo
+ex:place_castel_ovo a ex:Landmark ;
+    rdfs:label "Castel dell'Ovo" ;
+    rdfs:comment "Seafront castle with scenic routes and partial accessibility constraints" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Naples ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.6 ;
+    ex:ethicalRating 4.0 ;
+    prov:wasAttributedTo ex:LinkedOpenData ;
+    ex:lastUpdatedOn "2024-05-18T17:00:00Z"^^xsd:dateTime .
+
+# Place 29: Vesuvius National Park Trail
+ex:place_vesuvius_trail a ex:NaturalSite ;
+    rdfs:label "Vesuvius National Park Trail" ;
+    rdfs:comment "Volcanic nature trail with conservation management but limited wheelchair access" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:Naples ;
+    ex:hasAccessibility ex:NotWheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.6 ;
+    ex:ethicalRating 3.5 ;
+    prov:wasAttributedTo ex:ConservationOrg ;
+    ex:lastUpdatedOn "2024-05-17T06:40:00Z"^^xsd:dateTime .
+
+# Place 30: Local Pizzeria Decumani
+ex:place_decumani_pizzeria a ex:Restaurant ;
+    rdfs:label "Local Pizzeria Decumani" ;
+    rdfs:comment "Historic-center pizzeria with community reviews, crowded lanes and limited step-free access" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:Naples ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:ModeratelySustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.5 ;
+    ex:ethicalRating 3.7 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-19T20:15:00Z"^^xsd:dateTime .
+
+# Place 31: Palermo Cathedral
+ex:place_palermo_cathedral a ex:Church ;
+    rdfs:label "Palermo Cathedral" ;
+    rdfs:comment "Architectural landmark with partial accessibility and high seasonal demand" ;
+    ex:hasCategory ex:Church ;
+    ex:belongsToLocation ex:Palermo ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.7 ;
+    ex:ethicalRating 3.9 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-18T09:50:00Z"^^xsd:dateTime .
+
+# Place 32: Norman Palace
+ex:place_norman_palace a ex:Landmark ;
+    rdfs:label "Norman Palace" ;
+    rdfs:comment "Historic palace and heritage site with accessible visitor routes in selected areas" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Palermo ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.6 ;
+    ex:ethicalRating 4.0 ;
+    prov:wasAttributedTo ex:CulturalHeritage ;
+    ex:lastUpdatedOn "2024-05-19T10:10:00Z"^^xsd:dateTime .
+
+# Place 33: Capo Market Kitchen
+ex:place_capo_market_kitchen a ex:Restaurant ;
+    rdfs:label "Capo Market Kitchen" ;
+    rdfs:comment "Street-food kitchen with high crowding and limited verified accessibility data" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:Palermo ;
+    ex:hasAccessibility ex:NotWheelchairAccessible ;
+    ex:hasSustainability ex:LowSustainability ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.2 ;
+    ex:ethicalRating 2.6 ;
+    prov:wasAttributedTo ex:UnverifiedSource ;
+    ex:lastUpdatedOn "2023-03-12T00:00:00Z"^^xsd:dateTime .
+
+# Place 34: Favorita Park
+ex:place_favorita_park a ex:NaturalSite ;
+    rdfs:label "Favorita Park" ;
+    rdfs:comment "Large urban green area with conservation value and mixed accessibility conditions" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:Palermo ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Low ;
+    ex:hasRating 4.3 ;
+    ex:ethicalRating 4.3 ;
+    prov:wasAttributedTo ex:ConservationOrg ;
+    ex:lastUpdatedOn "2024-05-17T07:25:00Z"^^xsd:dateTime .
+
+# Place 35: MAMbo Museum, Bologna
+ex:place_mambo a ex:Museum ;
+    rdfs:label "MAMbo Museum" ;
+    rdfs:comment "Modern art museum with accessible facilities and transparent cultural provenance" ;
+    ex:hasCategory ex:Museum ;
+    ex:belongsToLocation ex:Bologna ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Low ;
+    ex:hasRating 4.4 ;
+    ex:ethicalRating 4.4 ;
+    prov:wasAttributedTo ex:CulturalHeritage ;
+    ex:lastUpdatedOn "2024-05-20T14:30:00Z"^^xsd:dateTime .
+
+# Place 36: Sanctuary of San Luca
+ex:place_san_luca a ex:Church ;
+    rdfs:label "Sanctuary of San Luca" ;
+    rdfs:comment "Hilltop sanctuary connected by portico routes with partial accessibility" ;
+    ex:hasCategory ex:Church ;
+    ex:belongsToLocation ex:Bologna ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.7 ;
+    ex:ethicalRating 4.0 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-18T11:10:00Z"^^xsd:dateTime .
+
+# Place 37: Accessible Portico Walk
+ex:place_portico_walk a ex:Landmark ;
+    rdfs:label "Accessible Portico Walk" ;
+    rdfs:comment "Curated low-impact walking route through Bologna porticoes with step-free segments" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:Bologna ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.5 ;
+    ex:ethicalRating 4.6 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-20T07:45:00Z"^^xsd:dateTime .
+
+# Place 38: Sustainable Osteria Quadrilatero
+ex:place_quadrilatero_osteria a ex:Restaurant ;
+    rdfs:label "Sustainable Osteria Quadrilatero" ;
+    rdfs:comment "Small restaurant with local sourcing, verified access and moderate crowding" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:Bologna ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.6 ;
+    ex:ethicalRating 4.5 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-19T19:30:00Z"^^xsd:dateTime .
+
+# Place 39: Monterosso Accessible Promenade
+ex:place_monterosso_promenade a ex:Landmark ;
+    rdfs:label "Monterosso Accessible Promenade" ;
+    rdfs:comment "Seafront route in Cinque Terre with accessible stretches and seasonal crowd management" ;
+    ex:hasCategory ex:Landmark ;
+    ex:belongsToLocation ex:CinqueTerre ;
+    ex:hasAccessibility ex:WheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:High ;
+    ex:hasRating 4.5 ;
+    ex:ethicalRating 4.1 ;
+    prov:wasAttributedTo ex:TouristBoard ;
+    ex:lastUpdatedOn "2024-05-18T13:00:00Z"^^xsd:dateTime .
+
+# Place 40: Cinque Terre Marine Protected Area
+ex:place_cinque_terre_marine a ex:NaturalSite ;
+    rdfs:label "Cinque Terre Marine Protected Area" ;
+    rdfs:comment "Protected coastal ecosystem with strong sustainability profile and guided visitor limits" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:CinqueTerre ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:HighlySustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.8 ;
+    ex:ethicalRating 4.7 ;
+    prov:wasAttributedTo ex:ConservationOrg ;
+    ex:lastUpdatedOn "2024-05-17T06:10:00Z"^^xsd:dateTime .
+
+# Place 41: Vernazza Cliff Trail
+ex:place_vernazza_trail a ex:NaturalSite ;
+    rdfs:label "Vernazza Cliff Trail" ;
+    rdfs:comment "Scenic hiking path with high ecological sensitivity and no wheelchair access" ;
+    ex:hasCategory ex:NaturalSite ;
+    ex:belongsToLocation ex:CinqueTerre ;
+    ex:hasAccessibility ex:NotWheelchairAccessible ;
+    ex:hasSustainability ex:ModeratelySustainable ;
+    ex:hasCrowdingLevel ex:VeryHigh ;
+    ex:hasRating 4.7 ;
+    ex:ethicalRating 3.1 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-16T05:45:00Z"^^xsd:dateTime .
+
+# Place 42: Harbor Seafood Cooperative
+ex:place_harbor_seafood_coop a ex:Restaurant ;
+    rdfs:label "Harbor Seafood Cooperative" ;
+    rdfs:comment "Cooperative restaurant with local fish supply chain and partial accessibility" ;
+    ex:hasCategory ex:Restaurant ;
+    ex:belongsToLocation ex:CinqueTerre ;
+    ex:hasAccessibility ex:PartiallyWheelchairAccessible ;
+    ex:hasSustainability ex:Sustainable ;
+    ex:hasCrowdingLevel ex:Medium ;
+    ex:hasRating 4.4 ;
+    ex:ethicalRating 4.0 ;
+    prov:wasAttributedTo ex:CommunityReview ;
+    ex:lastUpdatedOn "2024-05-18T18:25:00Z"^^xsd:dateTime .
+
+# ===== LOCATIONS =====
+ex:Venice a ex:Location ;
+    rdfs:label "Venice" ;
+    rdfs:comment "Historic city in northeastern Italy, capital of Veneto region" .
+
+ex:Rome a ex:Location ;
+    rdfs:label "Rome" ;
+    rdfs:comment "Capital city of Italy, rich in ancient history and art" .
+
+ex:Florence a ex:Location ;
+    rdfs:label "Florence" ;
+    rdfs:comment "Capital of Tuscany, birthplace of the Renaissance" .
+
+ex:Milan a ex:Location ;
+    rdfs:label "Milan" ;
+    rdfs:comment "Major city in Lombardy known for design, fashion, heritage and business tourism" .
+
+ex:Turin a ex:Location ;
+    rdfs:label "Turin" ;
+    rdfs:comment "Piedmont capital with museums, river parks and historic architecture" .
+
+ex:Naples a ex:Location ;
+    rdfs:label "Naples" ;
+    rdfs:comment "Southern Italian city with archaeological heritage, coastal landmarks and food culture" .
+
+ex:Palermo a ex:Location ;
+    rdfs:label "Palermo" ;
+    rdfs:comment "Sicilian capital with Norman-Arab heritage, markets and urban parks" .
+
+ex:Bologna a ex:Location ;
+    rdfs:label "Bologna" ;
+    rdfs:comment "Emilia-Romagna city known for porticoes, food culture and university heritage" .
+
+ex:CinqueTerre a ex:Location ;
+    rdfs:label "Cinque Terre" ;
+    rdfs:comment "Coastal Ligurian destination with protected landscapes and sensitive visitor capacity" .
+
+# ===== ACCESSIBILITY VALUES =====
+ex:WheelchairAccessible rdfs:label "Wheelchair Accessible" .
+ex:PartiallyWheelchairAccessible rdfs:label "Partially Wheelchair Accessible" .
+ex:NotWheelchairAccessible rdfs:label "Not Wheelchair Accessible" .
+
+# ===== SUSTAINABILITY VALUES =====
+ex:HighlySustainable rdfs:label "Highly Sustainable" .
+ex:Sustainable rdfs:label "Sustainable" .
+ex:ModeratelySustainable rdfs:label "Moderately Sustainable" .
+ex:LowSustainability rdfs:label "Low Sustainability" .
+
+# ===== CROWDING LEVELS =====
+ex:Low rdfs:label "Low" .
+ex:Medium rdfs:label "Medium" .
+ex:High rdfs:label "High" .
+ex:VeryHigh rdfs:label "Very High" .
+
+# ===== PROVENANCE SOURCES =====
+ex:LinkedOpenData rdfs:label "Linked Open Data" .
+ex:TouristBoard rdfs:label "Official Tourist Board" .
+ex:ConservationOrg rdfs:label "Conservation Organization" .
+ex:CulturalHeritage rdfs:label "Cultural Heritage Database" .
+ex:CommunityReview rdfs:label "Community Review" .
+ex:UserGenerated rdfs:label "User Generated Content" .
+ex:UnverifiedSource rdfs:label "Unverified Source" .

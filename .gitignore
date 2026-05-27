@@ -1,4 +1,5 @@
 # Backend
+shared-dto/target
 backend-daas/target
 backend-daas/.classpath
 backend-daas/.project

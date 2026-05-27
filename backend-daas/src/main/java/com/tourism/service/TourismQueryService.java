@@ -34,19 +34,23 @@ public class TourismQueryService {
     public List<PlaceDTO> searchPlacesByLocation(String location) {
         log.debug("Searching places by location: {}", location);
         String query = PREFIX +
-            "SELECT ?place ?name ?category ?rating ?accessibility ?sustainability ?crowding " +
+            "SELECT ?place ?name ?description ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
             "WHERE { " +
             "  ?place a ?type ; " +
             "    rdfs:label ?name ; " +
-            "    ex:belongsToLocation ?loc ; " +
-            "    ex:hasCategory ?category ; " +
+            "    ex:belongsToLocation ?location ; " +
+            "    ex:hasCategory ?cat ; " +
             "    ex:hasRating ?rating ; " +
-            "    ex:hasAccessibility ?accessibility ; " +
-            "    ex:hasSustainability ?sustainability ; " +
-            "    ex:hasCrowdingLevel ?crowding . " +
+            "    ex:ethicalRating ?ethical ; " +
+            "    ex:hasAccessibility ?acc ; " +
+            "    ex:hasSustainability ?sust ; " +
+            "    ex:hasCrowdingLevel ?crowding ; " +
+            "    prov:wasAttributedTo ?provenance ; " +
+            "    ex:lastUpdatedOn ?updated . " +
             "  ?type rdfs:subClassOf* ex:Place . " +
-            "  ?loc rdfs:label ?locName . " +
-            "  FILTER(regex(?locName, '" + location + "', 'i')) " +
+            "  ?location rdfs:label ?locName . " +
+            "  OPTIONAL { ?place rdfs:comment ?description . } " +
+            "  FILTER(regex(str(?locName), '" + escapeSparqlRegex(location) + "', 'i')) " +
             "} LIMIT 20";
 
         return executeSparqlQuery(query, this::mapToPlaceDTO);
@@ -55,17 +59,22 @@ public class TourismQueryService {
     public List<PlaceDTO> searchByCategory(String category) {
         log.debug("Searching places by category: {}", category);
         String query = PREFIX +
-            "SELECT ?place ?name ?cat ?rating ?accessibility ?sustainability ?crowding " +
+            "SELECT ?place ?name ?description ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
             "WHERE { " +
             "  ?place a ?type ; " +
             "    rdfs:label ?name ; " +
+            "    ex:belongsToLocation ?location ; " +
             "    ex:hasCategory ?cat ; " +
             "    ex:hasRating ?rating ; " +
-            "    ex:hasAccessibility ?accessibility ; " +
-            "    ex:hasSustainability ?sustainability ; " +
-            "    ex:hasCrowdingLevel ?crowding . " +
+            "    ex:ethicalRating ?ethical ; " +
+            "    ex:hasAccessibility ?acc ; " +
+            "    ex:hasSustainability ?sust ; " +
+            "    ex:hasCrowdingLevel ?crowding ; " +
+            "    prov:wasAttributedTo ?provenance ; " +
+            "    ex:lastUpdatedOn ?updated . " +
             "  ?type rdfs:subClassOf* ex:Place . " +
-            "  FILTER(regex(str(?cat), '" + category + "', 'i')) " +
+            "  OPTIONAL { ?place rdfs:comment ?description . } " +
+            "  FILTER(" + buildCategoryFilter(category) + ") " +
             "} LIMIT 20";
 
         return executeSparqlQuery(query, this::mapToPlaceDTO);
@@ -88,9 +97,9 @@ public class TourismQueryService {
             "    ex:hasCrowdingLevel ?crowding . " +
             "  ?type rdfs:subClassOf* ex:Place . " +
             "  FILTER( " +
-            "    regex(str(?cat), '" + category + "', 'i') && " +
-            "    regex(str(?acc), '" + accessibility + "', 'i') && " +
-            "    regex(str(?sust), '" + sustainability + "', 'i') && " +
+            "    " + buildCategoryFilter(category) + " && " +
+            "    regex(str(?acc), '" + escapeSparqlRegex(accessibility) + "', 'i') && " +
+            "    regex(str(?sust), '" + escapeSparqlRegex(sustainability) + "', 'i') && " +
             "    ?rating >= " + minRating + " " +
             "  ) " +
             "} ORDER BY DESC(?rating) LIMIT 20";
@@ -249,11 +258,12 @@ public class TourismQueryService {
         }
 
         String escapedTerm = escapeSparqlRegex(term.trim());
+        String wordTerm = buildWordSearchPattern(escapedTerm);
         return "(" +
             "regex(str(?locLabel), '" + escapedTerm + "', 'i') || " +
             "regex(str(?location), '" + escapedTerm + "', 'i') || " +
-            "regex(str(?name), '" + escapedTerm + "', 'i') || " +
-            "(bound(?description) && regex(str(?description), '" + escapedTerm + "', 'i'))" +
+            "regex(str(?name), '" + wordTerm + "', 'i') || " +
+            "(bound(?description) && regex(str(?description), '" + wordTerm + "', 'i'))" +
             ")";
     }
 
@@ -274,9 +284,30 @@ public class TourismQueryService {
     }
 
     private String escapeSparqlRegex(String value) {
+        if (value == null) {
+            return "";
+        }
+
         return value
             .replace("\\", "\\\\")
-            .replace("'", "\\'");
+            .replace("'", "\\'")
+            .replace(".", "\\.")
+            .replace("^", "\\^")
+            .replace("$", "\\$")
+            .replace("|", "\\|")
+            .replace("?", "\\?")
+            .replace("*", "\\*")
+            .replace("+", "\\+")
+            .replace("(", "\\(")
+            .replace(")", "\\)")
+            .replace("[", "\\[")
+            .replace("]", "\\]")
+            .replace("{", "\\{")
+            .replace("}", "\\}");
+    }
+
+    private String buildWordSearchPattern(String escapedTerm) {
+        return "(^|[^A-Za-z0-9])" + escapedTerm + "([^A-Za-z0-9]|$)";
     }
 
     private PlaceDTO mapToPlaceDTO(QuerySolution qs) {

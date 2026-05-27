@@ -7,8 +7,12 @@ import org.apache.jena.rdf.model.Model;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -24,12 +28,9 @@ public class RdfStoreConfig {
     public Model tourismModel(Dataset dataset) {
         log.info("Loading Tourism RDF Model from Turtle file");
         Model model = dataset.getDefaultModel();
-        
-        try (InputStream is = getClass().getResourceAsStream("/rdf/tourism.ttl")) {
-            if (is == null) {
-                log.error("RDF Turtle file not found: /rdf/tourism.ttl");
-                throw new RuntimeException("Failed to load RDF model: file not found");
-            }
+
+        Path externalDataset = findExternalDataset();
+        try (InputStream is = openDataset(externalDataset)) {
             model.read(is, null, "TURTLE");
             log.info("Successfully loaded {} statements into RDF model", model.size());
         } catch (IOException e) {
@@ -38,6 +39,36 @@ public class RdfStoreConfig {
         }
         
         return model;
+    }
+
+    private Path findExternalDataset() {
+        List<Path> candidates = List.of(
+            Path.of("dataset", "tourism.ttl"),
+            Path.of("..", "dataset", "tourism.ttl"),
+            Path.of("backend-daas", "src", "main", "resources", "rdf", "tourism.ttl")
+        );
+
+        return candidates.stream()
+            .map(Path::toAbsolutePath)
+            .map(Path::normalize)
+            .filter(Files::isRegularFile)
+            .findFirst()
+            .orElse(null);
+    }
+
+    private InputStream openDataset(Path externalDataset) throws IOException {
+        if (externalDataset != null) {
+            log.info("Loading RDF dataset from external file: {}", externalDataset);
+            return new FileInputStream(externalDataset.toFile());
+        }
+
+        log.info("Loading RDF dataset from classpath: /rdf/tourism.ttl");
+        InputStream classpathDataset = getClass().getResourceAsStream("/rdf/tourism.ttl");
+        if (classpathDataset == null) {
+            log.error("RDF Turtle file not found in external paths or classpath");
+            throw new IOException("RDF Turtle file not found");
+        }
+        return classpathDataset;
     }
 
 }
