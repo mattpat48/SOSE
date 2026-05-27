@@ -1,211 +1,226 @@
 <template>
-  <div class="place-detail">
-    <div class="detail-header">
-      <h2>{{ place.name }}</h2>
-      <div class="detail-meta">
-        <span class="rating">⭐ Rating: {{ place.rating }}</span>
-        <span class="ethical">Ethics: {{ place.ethicalRating }}</span>
-      </div>
+  <aside class="detail-panel">
+    <div
+      v-if="!place"
+      class="empty-detail"
+    >
+      <MapPinned :size="34" />
+      <h3>Seleziona un luogo</h3>
+      <p>I dettagli RDF, la provenienza e le azioni etiche appariranno qui.</p>
     </div>
 
-    <div class="detail-description">
-      <p v-if="place.description">{{ place.description }}</p>
-    </div>
-
-    <div class="detail-grid">
-      <div class="detail-section">
-        <h3>Location & Category</h3>
-        <div class="detail-item">
-          <strong>Location:</strong> {{ place.location }}
-        </div>
-        <div class="detail-item">
-          <strong>Category:</strong> {{ place.category }}
-        </div>
-      </div>
-
-      <div class="detail-section">
-        <h3>Accessibility</h3>
-        <div class="detail-item" :class="place.accessibility.toLowerCase()">
-          {{ place.accessibility }}
+    <template v-else>
+      <div class="detail-title">
+        <span class="detail-icon">
+          <component
+            :is="categoryIcon(place.category)"
+            :size="22"
+          />
+        </span>
+        <div>
+          <span class="eyebrow">{{ place.category }} · {{ place.location }}</span>
+          <h3>{{ place.name }}</h3>
         </div>
       </div>
 
-      <div class="detail-section">
-        <h3>Sustainability</h3>
-        <div class="detail-item">
-          {{ place.sustainabilityLevel }}
+      <p
+        v-if="place.description"
+        class="description"
+      >
+        {{ place.description }}
+      </p>
+
+      <div class="score-strip">
+        <div>
+          <Star :size="18" />
+          <span>Rating</span>
+          <strong>{{ formatNumber(place.rating) }}</strong>
+        </div>
+        <div>
+          <Scale :size="18" />
+          <span>Ethics</span>
+          <strong>{{ formatNumber(place.ethicalRating) }}</strong>
+        </div>
+        <div>
+          <Users :size="18" />
+          <span>Crowding</span>
+          <strong>{{ place.crowdingLevel || 'n/a' }}</strong>
         </div>
       </div>
 
-      <div class="detail-section">
-        <h3>Crowding Level</h3>
-        <div class="detail-item">
-          {{ place.crowdingLevel }}
+      <div class="detail-list">
+        <div class="detail-row">
+          <Accessibility :size="18" />
+          <span>Accessibilita</span>
+          <strong>{{ place.accessibility || 'n/a' }}</strong>
+        </div>
+        <div class="detail-row">
+          <Leaf :size="18" />
+          <span>Sostenibilita</span>
+          <strong>{{ place.sustainabilityLevel || 'n/a' }}</strong>
+        </div>
+        <div class="detail-row">
+          <DatabaseZap :size="18" />
+          <span>Fonte</span>
+          <strong>{{ place.provenance || 'n/a' }}</strong>
+        </div>
+        <div class="detail-row">
+          <CalendarClock :size="18" />
+          <span>Aggiornato</span>
+          <strong>{{ formatDate(place.lastUpdated) }}</strong>
         </div>
       </div>
 
-      <div class="detail-section">
-        <h3>Data Source</h3>
-        <div class="detail-item">
-          <strong>Provenance:</strong> {{ place.provenance }}
+      <div class="context-panel">
+        <span class="eyebrow">User context</span>
+        <div class="check-grid">
+          <label
+            v-for="pref in preferenceOptions"
+            :key="pref.value"
+            class="check-row"
+          >
+            <input
+              v-model="context.preferences"
+              type="checkbox"
+              :value="pref.value"
+            >
+            <span><component
+              :is="pref.icon"
+              :size="15"
+            /> {{ pref.label }}</span>
+          </label>
         </div>
-        <div class="detail-item">
-          <strong>Last Updated:</strong> {{ formatDate(place.lastUpdated) }}
-        </div>
+        <label class="check-row wide">
+          <input
+            v-model="context.accessibilityNeeds"
+            type="checkbox"
+            value="wheelchair"
+          >
+          <span><Accessibility :size="15" /> Necessita wheelchair</span>
+        </label>
       </div>
-    </div>
 
-    <div class="detail-actions">
-      <button class="recommend-button" @click="requestRecommendation">
-        🔍 Request Ethical Recommendation
-      </button>
-    </div>
-  </div>
+      <div class="detail-actions">
+        <button
+          class="secondary-action"
+          type="button"
+          :disabled="loading"
+          @click="evaluatePlace"
+        >
+          <ShieldCheck :size="18" />
+          Valuta EaaS
+        </button>
+        <button
+          class="primary-action"
+          type="button"
+          :disabled="loading"
+          @click="requestRecommendation"
+        >
+          <Sparkles :size="18" />
+          Raccomanda
+        </button>
+      </div>
+    </template>
+  </aside>
 </template>
 
 <script>
+import {
+  Accessibility,
+  Building2,
+  CalendarClock,
+  Church,
+  DatabaseZap,
+  Landmark,
+  Leaf,
+  MapPinned,
+  Mountain,
+  Scale,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Store,
+  Trees,
+  Users,
+  Utensils
+} from '@lucide/vue'
+
 export default {
   name: 'PlaceDetail',
+  components: {
+    Accessibility,
+    Building2,
+    CalendarClock,
+    Church,
+    DatabaseZap,
+    Landmark,
+    Leaf,
+    MapPinned,
+    Mountain,
+    Scale,
+    ShieldCheck,
+    Sparkles,
+    Star,
+    Store,
+    Trees,
+    Users,
+    Utensils
+  },
   props: {
     place: {
       type: Object,
-      required: true
+      default: null
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
-  emits: ['request-recommendation'],
-  methods: {
-    formatDate(dateString) {
-      if (!dateString) return 'N/A'
-      try {
-        const date = new Date(dateString)
-        return date.toLocaleDateString('it-IT', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-        })
-      } catch {
-        return dateString
-      }
-    },
-    requestRecommendation() {
-      this.$emit('request-recommendation', {
+  emits: ['request-recommendation', 'evaluate-place'],
+  data() {
+    return {
+      context: {
         preferences: ['cultural', 'sustainable'],
         accessibilityNeeds: ['wheelchair']
+      },
+      preferenceOptions: [
+        { value: 'cultural', label: 'Culturale', icon: Building2 },
+        { value: 'sustainable', label: 'Sostenibile', icon: Leaf },
+        { value: 'nature', label: 'Natura', icon: Trees },
+        { value: 'food', label: 'Food', icon: Utensils }
+      ]
+    }
+  },
+  methods: {
+    categoryIcon(category) {
+      const icons = {
+        Museum: Building2,
+        Restaurant: Store,
+        NaturalSite: Mountain,
+        Landmark,
+        Church
+      }
+      return icons[category] || Landmark
+    },
+    formatNumber(value) {
+      return Number.isFinite(value) ? value.toFixed(1) : 'n/a'
+    },
+    formatDate(dateString) {
+      if (!dateString) return 'n/a'
+      const date = new Date(dateString)
+      if (Number.isNaN(date.getTime())) return dateString
+      return date.toLocaleDateString('it-IT', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
       })
+    },
+    requestRecommendation() {
+      this.$emit('request-recommendation', { ...this.context })
+    },
+    evaluatePlace() {
+      this.$emit('evaluate-place', { ...this.context })
     }
   }
 }
 </script>
-
-<style scoped>
-.place-detail {
-  background: white;
-  border-radius: 8px;
-  padding: 30px;
-}
-
-.detail-header {
-  margin-bottom: 30px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 20px;
-}
-
-.detail-header h2 {
-  color: #333;
-  margin: 0 0 15px 0;
-  font-size: 2em;
-}
-
-.detail-meta {
-  display: flex;
-  gap: 20px;
-  font-weight: 600;
-}
-
-.rating {
-  color: #ff9800;
-}
-
-.ethical {
-  color: #4caf50;
-}
-
-.detail-description {
-  background: #f5f5f5;
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 30px;
-  line-height: 1.6;
-  color: #555;
-}
-
-.detail-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-  margin-bottom: 30px;
-}
-
-.detail-section {
-  background: #fafafa;
-  padding: 20px;
-  border-radius: 6px;
-  border-left: 4px solid #667eea;
-}
-
-.detail-section h3 {
-  color: #667eea;
-  margin: 0 0 15px 0;
-  font-size: 1.1em;
-}
-
-.detail-item {
-  margin: 10px 0;
-  padding: 8px;
-  background: white;
-  border-radius: 4px;
-  color: #555;
-}
-
-.detail-item strong {
-  color: #333;
-}
-
-.detail-item.wheelchairaccessible {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-.detail-item.partiallywheelchairaccessible {
-  background: #fff3e0;
-  color: #e65100;
-}
-
-.detail-item.notwheelchairaccessible {
-  background: #ffebee;
-  color: #c62828;
-}
-
-.detail-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.recommend-button {
-  flex: 1;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.recommend-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-</style>

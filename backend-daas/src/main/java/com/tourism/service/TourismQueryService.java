@@ -102,8 +102,11 @@ public class TourismQueryService {
         log.debug("Searching basic criteria: location={}, category={}, minRating={}",
             location, category, minRating);
 
+        String searchFilter = buildTextSearchFilter(location);
+        String categoryFilter = buildCategoryFilter(category);
+
         String query = PREFIX +
-            "SELECT ?place ?name ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
+            "SELECT ?place ?name ?description ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
             "WHERE { " +
             "  ?place a ?type ; " +
             "    rdfs:label ?name ; " +
@@ -118,9 +121,10 @@ public class TourismQueryService {
             "    ex:lastUpdatedOn ?updated . " +
             "  ?type rdfs:subClassOf* ex:Place . " +
             "  ?location rdfs:label ?locLabel . " +
+            "  OPTIONAL { ?place rdfs:comment ?description . } " +
             "  FILTER( " +
-            "    regex(str(?locLabel), '" + location + "', 'i') && " +
-            "    regex(str(?cat), '" + category + "', 'i') && " +
+            "    " + searchFilter + " && " +
+            "    " + categoryFilter + " && " +
             "    ?rating >= " + minRating + " " +
             "  ) " +
             "} ORDER BY DESC(?rating) LIMIT 100";
@@ -143,8 +147,11 @@ public class TourismQueryService {
             sustFilter = "regex(str(?sust), '(/|#)(Sustainable|HighlySustainable|ModeratelySustainable)$', 'i')";
         }
 
+        String searchFilter = buildTextSearchFilter(location);
+        String categoryFilter = buildCategoryFilter(category);
+
         String query = PREFIX +
-            "SELECT ?place ?name ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
+            "SELECT ?place ?name ?description ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
             "WHERE { " +
             "  ?place a ?type ; " +
             "    rdfs:label ?name ; " +
@@ -159,9 +166,10 @@ public class TourismQueryService {
             "    ex:lastUpdatedOn ?updated . " +
             "  ?type rdfs:subClassOf* ex:Place . " +
             "  ?location rdfs:label ?locLabel . " +
+            "  OPTIONAL { ?place rdfs:comment ?description . } " +
             "  FILTER( " +
-            "    regex(str(?locLabel), '" + location + "', 'i') && " +
-            "    regex(str(?cat), '" + category + "', 'i') && " +
+            "    " + searchFilter + " && " +
+            "    " + categoryFilter + " && " +
             "    " + accFilter + " && " +
             "    " + sustFilter + " && " +
             "    ?rating >= " + minRating + " " +
@@ -174,7 +182,7 @@ public class TourismQueryService {
     public PlaceDTO getPlaceById(String id) {
         log.debug("Fetching place by ID: {}", id);
         String query = PREFIX +
-            "SELECT ?place ?name ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
+            "SELECT ?place ?name ?description ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
             "WHERE { " +
             "  ?place a ?type ; " +
             "    rdfs:label ?name ; " +
@@ -188,6 +196,7 @@ public class TourismQueryService {
             "    prov:wasAttributedTo ?provenance ; " +
             "    ex:lastUpdatedOn ?updated . " +
             "  ?type rdfs:subClassOf* ex:Place . " +
+            "  OPTIONAL { ?place rdfs:comment ?description . } " +
             "  FILTER(regex(str(?place), '" + id + "')) " +
             "} LIMIT 1";
 
@@ -197,7 +206,7 @@ public class TourismQueryService {
 
     public List<PlaceDTO> listAllPlaces() {
         String query = PREFIX +
-            "SELECT ?place ?name ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
+            "SELECT ?place ?name ?description ?cat ?location ?rating ?acc ?sust ?crowding ?ethical ?provenance ?updated " +
             "WHERE { " +
             "  ?place a ?type ; " +
             "    rdfs:label ?name ; " +
@@ -211,6 +220,7 @@ public class TourismQueryService {
             "    prov:wasAttributedTo ?provenance ; " +
             "    ex:lastUpdatedOn ?updated . " +
             "  ?type rdfs:subClassOf* ex:Place . " +
+            "  OPTIONAL { ?place rdfs:comment ?description . } " +
             "} ORDER BY DESC(?rating) LIMIT 100";
 
         return executeSparqlQuery(query, this::mapToPlaceDTO);
@@ -233,6 +243,42 @@ public class TourismQueryService {
         return results;
     }
 
+    private String buildTextSearchFilter(String term) {
+        if (isAllFilter(term)) {
+            return "true";
+        }
+
+        String escapedTerm = escapeSparqlRegex(term.trim());
+        return "(" +
+            "regex(str(?locLabel), '" + escapedTerm + "', 'i') || " +
+            "regex(str(?location), '" + escapedTerm + "', 'i') || " +
+            "regex(str(?name), '" + escapedTerm + "', 'i') || " +
+            "(bound(?description) && regex(str(?description), '" + escapedTerm + "', 'i'))" +
+            ")";
+    }
+
+    private String buildCategoryFilter(String category) {
+        if (isAllFilter(category)) {
+            return "true";
+        }
+
+        return "regex(str(?cat), '" + escapeSparqlRegex(category.trim()) + "', 'i')";
+    }
+
+    private boolean isAllFilter(String value) {
+        return value == null
+            || value.isBlank()
+            || "All".equalsIgnoreCase(value)
+            || "Tutte".equalsIgnoreCase(value)
+            || "Any".equalsIgnoreCase(value);
+    }
+
+    private String escapeSparqlRegex(String value) {
+        return value
+            .replace("\\", "\\\\")
+            .replace("'", "\\'");
+    }
+
     private PlaceDTO mapToPlaceDTO(QuerySolution qs) {
         PlaceDTO dto = new PlaceDTO();
 
@@ -245,6 +291,11 @@ public class TourismQueryService {
         if (qs.contains("?name")) {
             Literal nameLit = qs.getLiteral("?name");
             dto.setName(nameLit.getString());
+        }
+
+        if (qs.contains("?description")) {
+            Literal descriptionLit = qs.getLiteral("?description");
+            dto.setDescription(descriptionLit.getString());
         }
 
         if (qs.contains("?rating")) {

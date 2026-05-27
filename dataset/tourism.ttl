@@ -81,3 +81,253 @@
   :sustainabilityScore 0.85 ;
   :crowding "Low" ;
   dct:source "official" .
+
+:place_brera a :Place ;
+  :name "Pinacoteca di Brera" ;
+  :category "Museum" ;
+  :location "Milan" ;
+  :rating 4.7 ;
+  :accessibilityScore 0.95 ;
+  :sustainabilityScore 0.78 ;
+  :crowding "Moderate" ;
+  dct:source "heritage" .
+
+:place_milan_duomo a :Place ;
+  :name "Milan Cathedral" ;
+  :category "Church" ;
+  :location "Milan" ;
+  :rating 4.8 ;
+  :accessibilityScore 0.65 ;
+  :sustainabilityScore 0.72 ;
+  :crowding "Very High" ;
+  dct:source "official" .
+
+:place_sforza_castle a :Place ;
+  :name "Sforza Castle" ;
+  :category "Landmark" ;
+  :location "Milan" ;
+  :rating 4.6 ;
+  :accessibilityScore 0.9 ;
+  :sustainabilityScore 0.62 ;
+  :crowding "Moderate" ;
+  dct:source "linked-open-data" .
+
+:place_parco_sempione a :Place ;
+  :name "Parco Sempione" ;
+  :category "Nature" ;
+  :location "Milan" ;
+  :rating 4.5 ;
+  :accessibilityScore 0.92 ;
+  :sustainabilityScore 0.94 ;
+  :crowding "Moderate" ;
+  dct:source "conservation" .
+
+:place_navigli_restaurant a :Place ;
+  :name "Navigli Waterfront Restaurant" ;
+  :category "Restaurant" ;
+  :location "Milan" ;
+  :rating 4.3 ;
+  :accessibilityScore 0.86 ;
+  :sustainabilityScore 0.74 ;
+  :crowding "High" ;
+  dct:source "community" .
+
+:place_egyptian_museum a :Place ;
+  :name "Egyptian Museum" ;
+  :category "Museum" ;
+  :location "Turin" ;
+  :rating 4.8 ;
+  :accessibilityScore 0.96 ;
+  :sustainabilityScore 0.8 ;
+  :crowding "Moderate" ;
+  dct:source "heritage" .
+
+:place_mole_antonelliana a :Place ;
+  :name "Mole Antonelliana" ;
+  :category "Landmark" ;
+  :location "Turin" ;
+  :rating 4.6 ;
+  :accessibilityScore 0.62 ;
+  :sustainabilityScore 0.7 ;
+  :crowding "High" ;
+  dct:source "official" .
+
+:place_valentino_park a :Place ;
+  :name "Valentino Park" ;
+  :category "Nature" ;
+  :location "Turin" ;
+  :rating 4.5 ;
+  :accessibilityScore 0.94 ;
+  :sustainabilityScore 0.96 ;
+  :crowding "Low" ;
+  dct:source "conservation" .
+
+:place_porta_palazzo_eatery a :Place ;
+  :name "Porta Palazzo Market Eatery" ;
+  :category "Restaurant" ;
+  :location "Turin" ;
+  :rating 4.2 ;
+  :accessibilityScore 0.58 ;
+  :sustainabilityScore 0.55 ;
+  :crowding "High" ;
+  dct:source "community" .
+
+:place_mann a :Place ;
+  :name "National Archaeological Museum of Naples" ;
+  :category "Museum" ;
+  :location "Naples" ;
+  :rating 4.7 ;
+  :accessibilityScore 0.9 ;
+  :sustainabilityScore 0.76 ;
+  :crowding "Moderate" ;
+  dct:source "heritage" .
+
+:place_castel_ovo a :Place ;
+  :name "Castel dell'Ovo" ;
+  :category "Landmark" ;
+  :location "Naples" ;
+  :rating 4.6 ;
+  :accessibilityScore 0.64 ;
+  :sustainabilityScore 0.7 ;
+  :crowding "Moderate" ;
+  dct:source "linked-open-data" .
+
+:place_vesuvius_trail a :Place ;
+  :name "Vesuvius National Park Trail" ;
+  :category "Nature" ;
+  :location "Naples" ;
+  :rating 4.6 ;
+  :accessibilityScore 0.2 ;
+  :sustainabilityScore 0.92 ;
+  :crowding "High" ;
+  dct:source "conservation" .
+
+:place_decumani_pizzeria a :Place ;
+  :name "Local Pizzeria Decumani" ;
+  :category "Restaurant" ;
+  :location "Naples" ;
+  :rating 4.5 ;
+  :accessibilityScore 0.55 ;
+  :sustainabilityScore 0.5 ;
+  :crowding "High" ;
+  dct:source "community" .
+
+:place_palermo_cathedral a :Place ;
+  :name "Palermo Cathedral" ;
+  :category "Church" ;
+  :location "Palermo" ;
+  :rating 4.7 ;
+  :accessibilityScore 0.6 ;
+  :sustainabilityScore 0.72 ;
+  :crowding "High" ;
+  dct:source "official" .
+
+:place_norman_palace a :Place ;
+  :name "Norman Palace" ;
+  :category "Landmark" ;
+  :location "Palermo" ;
+  :rating 4.6 ;
+  :accessibilityScore 0.62 ;
+  :sustainabilityScore 0.75 ;
+  :crowding "Moderate" ;
+  dct:source "heritage" .
+
+:place_capo_market_kitchen a :Place ;
+  :name "Capo Market Kitchen" ;
+  :category "Restaurant" ;
+  :location "Palermo" ;
+  :rating 4.2 ;
+  :accessibilityScore 0.18 ;
+  :sustainabilityScore 0.28 ;
+  :crowding "Very High" ;
+  dct:source "unverified" .
+
+:place_favorita_park a :Place ;
+  :name "Favorita Park" ;
+  :category "Nature" ;
+  :location "Palermo" ;
+  :rating 4.3 ;
+  :accessibilityScore 0.62 ;
+  :sustainabilityScore 0.9 ;
+  :crowding "Low" ;
+  dct:source "conservation" .
+
+:place_mambo a :Place ;
+  :name "MAMbo Museum" ;
+  :category "Museum" ;
+  :location "Bologna" ;
+  :rating 4.4 ;
+  :accessibilityScore 0.93 ;
+  :sustainabilityScore 0.78 ;
+  :crowding "Low" ;
+  dct:source "heritage" .
+
+:place_san_luca a :Place ;
+  :name "Sanctuary of San Luca" ;
+  :category "Church" ;
+  :location "Bologna" ;
+  :rating 4.7 ;
+  :accessibilityScore 0.6 ;
+  :sustainabilityScore 0.73 ;
+  :crowding "Moderate" ;
+  dct:source "official" .
+
+:place_portico_walk a :Place ;
+  :name "Accessible Portico Walk" ;
+  :category "Landmark" ;
+  :location "Bologna" ;
+  :rating 4.5 ;
+  :accessibilityScore 0.95 ;
+  :sustainabilityScore 0.95 ;
+  :crowding "Moderate" ;
+  dct:source "official" .
+
+:place_quadrilatero_osteria a :Place ;
+  :name "Sustainable Osteria Quadrilatero" ;
+  :category "Restaurant" ;
+  :location "Bologna" ;
+  :rating 4.6 ;
+  :accessibilityScore 0.9 ;
+  :sustainabilityScore 0.82 ;
+  :crowding "Moderate" ;
+  dct:source "community" .
+
+:place_monterosso_promenade a :Place ;
+  :name "Monterosso Accessible Promenade" ;
+  :category "Landmark" ;
+  :location "Cinque Terre" ;
+  :rating 4.5 ;
+  :accessibilityScore 0.85 ;
+  :sustainabilityScore 0.78 ;
+  :crowding "High" ;
+  dct:source "official" .
+
+:place_cinque_terre_marine a :Place ;
+  :name "Cinque Terre Marine Protected Area" ;
+  :category "Nature" ;
+  :location "Cinque Terre" ;
+  :rating 4.8 ;
+  :accessibilityScore 0.58 ;
+  :sustainabilityScore 0.97 ;
+  :crowding "Moderate" ;
+  dct:source "conservation" .
+
+:place_vernazza_trail a :Place ;
+  :name "Vernazza Cliff Trail" ;
+  :category "Nature" ;
+  :location "Cinque Terre" ;
+  :rating 4.7 ;
+  :accessibilityScore 0.15 ;
+  :sustainabilityScore 0.55 ;
+  :crowding "Very High" ;
+  dct:source "community" .
+
+:place_harbor_seafood_coop a :Place ;
+  :name "Harbor Seafood Cooperative" ;
+  :category "Restaurant" ;
+  :location "Cinque Terre" ;
+  :rating 4.4 ;
+  :accessibilityScore 0.62 ;
+  :sustainabilityScore 0.8 ;
+  :crowding "Moderate" ;
+  dct:source "community" .
