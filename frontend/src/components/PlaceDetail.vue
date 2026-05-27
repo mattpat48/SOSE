@@ -1,12 +1,12 @@
 <template>
-  <aside class="detail-panel">
+  <article class="detail-panel detail-card">
     <div
       v-if="!place"
       class="empty-detail"
     >
       <MapPinned :size="34" />
-      <h3>Seleziona un luogo</h3>
-      <p>I dettagli RDF, la provenienza e le azioni etiche appariranno qui.</p>
+      <h3>Select a place</h3>
+      <p>Details and the ethical report will appear here.</p>
     </div>
 
     <template v-else>
@@ -51,77 +51,60 @@
       <div class="detail-list">
         <div class="detail-row">
           <Accessibility :size="18" />
-          <span>Accessibilita</span>
+          <span>Accessibility</span>
           <strong>{{ place.accessibility || 'n/a' }}</strong>
         </div>
         <div class="detail-row">
           <Leaf :size="18" />
-          <span>Sostenibilita</span>
+          <span>Sustainability</span>
           <strong>{{ place.sustainabilityLevel || 'n/a' }}</strong>
         </div>
         <div class="detail-row">
           <DatabaseZap :size="18" />
-          <span>Fonte</span>
+          <span>Source</span>
           <strong>{{ place.provenance || 'n/a' }}</strong>
         </div>
         <div class="detail-row">
           <CalendarClock :size="18" />
-          <span>Aggiornato</span>
+          <span>Updated</span>
           <strong>{{ formatDate(place.lastUpdated) }}</strong>
         </div>
       </div>
 
-      <div class="context-panel">
-        <span class="eyebrow">User context</span>
-        <div class="check-grid">
-          <label
-            v-for="pref in preferenceOptions"
-            :key="pref.value"
-            class="check-row"
-          >
-            <input
-              v-model="context.preferences"
-              type="checkbox"
-              :value="pref.value"
-            >
-            <span><component
-              :is="pref.icon"
-              :size="15"
-            /> {{ pref.label }}</span>
-          </label>
-        </div>
-        <label class="check-row wide">
-          <input
-            v-model="context.accessibilityNeeds"
-            type="checkbox"
-            value="wheelchair"
-          >
-          <span><Accessibility :size="15" /> Necessita wheelchair</span>
-        </label>
+      <button
+        class="primary-action ethical-cta"
+        type="button"
+        :disabled="loading"
+        @click="$emit('request-ethical-report')"
+      >
+        <LoaderCircle
+          v-if="loading"
+          class="spin"
+          :size="18"
+        />
+        <FileCheck2
+          v-else
+          :size="18"
+        />
+        {{ ethicalDecision ? 'Regenerate Ethical Report' : 'Generate Ethical Report' }}
+      </button>
+
+      <div
+        v-if="ethicalError"
+        class="state-block error-state ethical-error"
+      >
+        <CircleAlert :size="20" />
+        <span>{{ ethicalError }}</span>
       </div>
 
-      <div class="detail-actions">
-        <button
-          class="secondary-action"
-          type="button"
-          :disabled="loading"
-          @click="evaluatePlace"
-        >
-          <ShieldCheck :size="18" />
-          Valuta EaaS
-        </button>
-        <button
-          class="primary-action"
-          type="button"
-          :disabled="loading"
-          @click="requestRecommendation"
-        >
-          <Sparkles :size="18" />
-          Raccomanda
-        </button>
-      </div>
+      <EthicalDecision
+        v-if="ethicalDecision"
+        :decision="ethicalDecision"
+        :source="decisionSource"
+        class="inline-decision"
+      />
     </template>
-  </aside>
+  </article>
 </template>
 
 <script>
@@ -130,20 +113,20 @@ import {
   Building2,
   CalendarClock,
   Church,
+  CircleAlert,
   DatabaseZap,
+  FileCheck2,
   Landmark,
   Leaf,
+  LoaderCircle,
   MapPinned,
   Mountain,
   Scale,
-  ShieldCheck,
-  Sparkles,
   Star,
   Store,
-  Trees,
-  Users,
-  Utensils
+  Users
 } from '@lucide/vue'
+import EthicalDecision from './EthicalDecision.vue'
 
 export default {
   name: 'PlaceDetail',
@@ -152,19 +135,19 @@ export default {
     Building2,
     CalendarClock,
     Church,
+    CircleAlert,
     DatabaseZap,
+    EthicalDecision,
+    FileCheck2,
     Landmark,
     Leaf,
+    LoaderCircle,
     MapPinned,
     Mountain,
     Scale,
-    ShieldCheck,
-    Sparkles,
     Star,
     Store,
-    Trees,
-    Users,
-    Utensils
+    Users
   },
   props: {
     place: {
@@ -174,23 +157,21 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    ethicalDecision: {
+      type: Object,
+      default: null
+    },
+    decisionSource: {
+      type: String,
+      default: ''
+    },
+    ethicalError: {
+      type: String,
+      default: null
     }
   },
-  emits: ['request-recommendation', 'evaluate-place'],
-  data() {
-    return {
-      context: {
-        preferences: ['cultural', 'sustainable'],
-        accessibilityNeeds: ['wheelchair']
-      },
-      preferenceOptions: [
-        { value: 'cultural', label: 'Culturale', icon: Building2 },
-        { value: 'sustainable', label: 'Sostenibile', icon: Leaf },
-        { value: 'nature', label: 'Natura', icon: Trees },
-        { value: 'food', label: 'Food', icon: Utensils }
-      ]
-    }
-  },
+  emits: ['request-ethical-report'],
   methods: {
     categoryIcon(category) {
       const icons = {
@@ -209,17 +190,11 @@ export default {
       if (!dateString) return 'n/a'
       const date = new Date(dateString)
       if (Number.isNaN(date.getTime())) return dateString
-      return date.toLocaleDateString('it-IT', {
+      return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
       })
-    },
-    requestRecommendation() {
-      this.$emit('request-recommendation', { ...this.context })
-    },
-    evaluatePlace() {
-      this.$emit('evaluate-place', { ...this.context })
     }
   }
 }

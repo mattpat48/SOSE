@@ -5,33 +5,25 @@
   >
     <div class="panel-heading">
       <div>
-        <span class="eyebrow">Query DaaS</span>
-        <h3>Ricerca turismo</h3>
+        <span class="eyebrow">DaaS query</span>
+        <h3>Tourism search</h3>
       </div>
-      <button
-        class="icon-button"
-        type="button"
-        title="Carica catalogo completo"
-        @click="$emit('load-all')"
-      >
-        <ListRestart :size="18" />
-      </button>
     </div>
 
     <div class="field-grid">
       <label class="field">
-        <span><MapPin :size="15" /> Cerca</span>
+        <span><Type :size="15" /> Name</span>
         <input
           v-model.trim="criteria.location"
           type="text"
-          placeholder="Citta, luogo o descrizione"
+          placeholder="City, place or description"
         >
       </label>
 
       <label class="field">
-        <span><Shapes :size="15" /> Categoria</span>
+        <span><Shapes :size="15" /> Category</span>
         <select v-model="criteria.category">
-          <option value="All">Tutte</option>
+          <option value="All">All</option>
           <option value="Museum">Museum</option>
           <option value="Restaurant">Restaurant</option>
           <option value="NaturalSite">NaturalSite</option>
@@ -41,7 +33,7 @@
       </label>
 
       <label class="field">
-        <span><Star :size="15" /> Rating minimo</span>
+        <span><Star :size="15" /> Minimum rating</span>
         <input
           v-model.number="criteria.minRating"
           type="number"
@@ -55,7 +47,7 @@
     <div
       class="mode-row"
       role="group"
-      aria-label="Tipo di ricerca"
+      aria-label="Search type"
     >
       <button
         class="segment"
@@ -64,7 +56,7 @@
         @click="mode = 'basic'"
       >
         <Search :size="16" />
-        Base
+        Basic
       </button>
       <button
         class="segment"
@@ -73,7 +65,7 @@
         @click="mode = 'ethical'"
       >
         <ShieldCheck :size="16" />
-        Etica
+        Ethical
       </button>
     </div>
 
@@ -82,7 +74,7 @@
       class="ethical-fields"
     >
       <label class="field">
-        <span><Accessibility :size="15" /> Accessibilita</span>
+        <span><Accessibility :size="15" /> Accessibility</span>
         <select v-model="criteria.accessibility">
           <option value="WheelchairAccessible">WheelchairAccessible</option>
           <option value="PartiallyWheelchairAccessible">PartiallyWheelchairAccessible</option>
@@ -91,7 +83,7 @@
       </label>
 
       <label class="field">
-        <span><Leaf :size="15" /> Sostenibilita</span>
+        <span><Leaf :size="15" /> Sustainability</span>
         <select v-model="criteria.sustainability">
           <option value="HighlySustainable">HighlySustainable</option>
           <option value="Sustainable">Sustainable</option>
@@ -115,7 +107,7 @@
         v-else
         :size="18"
       />
-      Cerca luoghi
+      Search places
     </button>
   </form>
 </template>
@@ -124,44 +116,55 @@
 import {
   Accessibility,
   Leaf,
-  ListRestart,
   LoaderCircle,
-  MapPin,
   Search,
   Shapes,
   ShieldCheck,
-  Star
+  Star,
+  Type
 } from '@lucide/vue'
+
+const DEFAULT_CRITERIA = {
+  location: '',
+  category: 'All',
+  accessibility: 'WheelchairAccessible',
+  sustainability: 'Sustainable',
+  minRating: 4.0
+}
 
 export default {
   name: 'SearchForm',
   components: {
     Accessibility,
     Leaf,
-    ListRestart,
     LoaderCircle,
-    MapPin,
     Search,
     Shapes,
     ShieldCheck,
-    Star
+    Star,
+    Type
   },
   props: {
     loading: {
       type: Boolean,
       default: false
+    },
+    initialCriteria: {
+      type: Object,
+      default: null
     }
   },
-  emits: ['search-basic', 'search-ethical', 'load-all'],
+  emits: ['search-basic', 'search-ethical'],
   data() {
+    const init = this.initialCriteria || {}
     return {
-      mode: 'basic',
+      mode: init.mode || 'basic',
       criteria: {
-        location: '',
-        category: 'All',
-        accessibility: 'WheelchairAccessible',
-        sustainability: 'Sustainable',
-        minRating: 4.0
+        location: init.location ?? DEFAULT_CRITERIA.location,
+        category: init.category ?? DEFAULT_CRITERIA.category,
+        accessibility: init.accessibility ?? DEFAULT_CRITERIA.accessibility,
+        sustainability: init.sustainability ?? DEFAULT_CRITERIA.sustainability,
+        minRating: init.minRating ?? DEFAULT_CRITERIA.minRating
       }
     }
   },
