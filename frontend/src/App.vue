@@ -2,7 +2,7 @@
   <div class="app-shell">
     <aside
       class="sidebar"
-      aria-label="Navigazione principale"
+      aria-label="Stato servizi"
     >
       <div class="brand">
         <div class="brand-mark">
@@ -13,23 +13,6 @@
           <h1>DaaS + EaaS</h1>
         </div>
       </div>
-
-      <nav class="nav-stack">
-        <button
-          v-for="item in navItems"
-          :key="item.id"
-          class="nav-item"
-          :class="{ active: activeView === item.id }"
-          type="button"
-          @click="activeView = item.id"
-        >
-          <component
-            :is="item.icon"
-            :size="18"
-          />
-          <span>{{ item.label }}</span>
-        </button>
-      </nav>
 
       <div class="service-stack">
         <div class="service-row">
@@ -42,45 +25,64 @@
           <span>EaaS</span>
           <strong :class="statusClass(services.eaas)">{{ serviceLabel(services.eaas) }}</strong>
         </div>
+        <button
+          class="service-refresh"
+          type="button"
+          @click="checkServices"
+        >
+          <RefreshCcw :size="16" />
+          <span>Aggiorna servizi</span>
+        </button>
       </div>
     </aside>
 
     <main class="workspace">
-      <section class="topbar">
-        <div>
-          <span class="eyebrow">Tourism recommendation engine</span>
-          <h2>Esplora luoghi, filtra criteri etici e valuta le policy.</h2>
-        </div>
-        <button
-          class="icon-button"
-          type="button"
-          title="Aggiorna servizi"
-          @click="checkServices"
-        >
-          <RefreshCcw :size="18" />
-        </button>
-      </section>
-
+      <!-- Stage: hero search -->
       <section
-        v-if="activeView === 'explore'"
-        class="content-grid"
+        v-if="stage === 'search'"
+        class="hero-stage"
       >
+        <div class="hero-copy">
+          <span class="eyebrow">Tourism recommendation engine</span>
+          <h2>Cerca luoghi etici e sostenibili.</h2>
+          <p>Filtra per nome, categoria o rating. Apri il dettaglio di un luogo per generare l'Ethical Report.</p>
+        </div>
+
         <SearchForm
           :loading="loading"
+          :initial-criteria="lastCriteria"
           @search-basic="handleBasicSearch"
           @search-ethical="handleEthicalSearch"
-          @load-all="loadAllPlaces"
         />
 
-        <div class="results-panel">
-          <div class="panel-heading">
-            <div>
-              <span class="eyebrow">{{ searchModeLabel }}</span>
-              <h3>Risultati</h3>
-            </div>
-            <span class="count-badge">{{ places.length }}</span>
-          </div>
+        <div
+          v-if="error"
+          class="state-block error-state"
+        >
+          <CircleAlert :size="20" />
+          <span>{{ error }}</span>
+        </div>
+      </section>
 
+      <!-- Stage: results -->
+      <section
+        v-else-if="stage === 'results'"
+        class="results-stage"
+      >
+        <header class="stage-toolbar">
+          <button
+            class="back-link"
+            type="button"
+            @click="backToSearch"
+          >
+            <ArrowLeft :size="18" />
+            <span>Nuova ricerca</span>
+          </button>
+          <span class="eyebrow stage-label">{{ searchModeLabel }}</span>
+          <span class="count-badge">{{ places.length }}</span>
+        </header>
+
+        <div class="results-panel">
           <div
             v-if="loading"
             class="state-block"
@@ -107,40 +109,33 @@
             @select="selectPlace"
           />
         </div>
+      </section>
+
+      <!-- Stage: detail with inline ethical report -->
+      <section
+        v-else
+        class="detail-stage"
+      >
+        <header class="stage-toolbar">
+          <button
+            class="back-link"
+            type="button"
+            @click="backToResults"
+          >
+            <ArrowLeft :size="18" />
+            <span>Torna ai risultati</span>
+          </button>
+          <span class="eyebrow stage-label">Dettaglio luogo</span>
+        </header>
 
         <PlaceDetail
           :place="selectedPlace"
           :loading="evaluationLoading"
-          @request-recommendation="handleRecommendation"
-          @evaluate-place="handleDirectEvaluation"
+          :ethical-decision="ethicalDecision"
+          :decision-source="decisionSource"
+          :ethical-error="ethicalError"
+          @request-ethical-report="handleEthicalReport"
         />
-      </section>
-
-      <section
-        v-else
-        class="evaluation-view"
-      >
-        <EthicalDecision
-          v-if="ethicalDecision"
-          :decision="ethicalDecision"
-          :source="decisionSource"
-        />
-        <div
-          v-else
-          class="empty-evaluation"
-        >
-          <ShieldQuestion :size="42" />
-          <h3>Nessuna valutazione ancora generata</h3>
-          <p>Seleziona un luogo dalla dashboard e avvia una valutazione EaaS o una raccomandazione etica.</p>
-          <button
-            class="primary-action"
-            type="button"
-            @click="activeView = 'explore'"
-          >
-            <Search :size="18" />
-            Torna alla ricerca
-          </button>
-        </div>
       </section>
     </main>
   </div>
@@ -149,21 +144,17 @@
 <script>
 import axios from 'axios'
 import {
+  ArrowLeft,
   CircleAlert,
   Compass,
   Database,
-  FileCheck2,
-  LayoutDashboard,
   LoaderCircle,
   RefreshCcw,
-  Search,
-  ShieldCheck,
-  ShieldQuestion
+  ShieldCheck
 } from '@lucide/vue'
 import SearchForm from './components/SearchForm.vue'
 import PlaceList from './components/PlaceList.vue'
 import PlaceDetail from './components/PlaceDetail.vue'
-import EthicalDecision from './components/EthicalDecision.vue'
 
 const DAAS_BASE_URL = 'http://localhost:8080/daas/api'
 const EAAS_BASE_URL = 'http://localhost:8081/eaas/api'
@@ -171,45 +162,38 @@ const EAAS_BASE_URL = 'http://localhost:8081/eaas/api'
 export default {
   name: 'App',
   components: {
+    ArrowLeft,
     CircleAlert,
     Compass,
     Database,
-    FileCheck2,
-    LayoutDashboard,
     LoaderCircle,
     RefreshCcw,
-    Search,
     ShieldCheck,
-    ShieldQuestion,
     SearchForm,
     PlaceList,
-    PlaceDetail,
-    EthicalDecision
+    PlaceDetail
   },
   data() {
     return {
-      activeView: 'explore',
+      stage: 'search',
       places: [],
       selectedPlace: null,
       ethicalDecision: null,
       decisionSource: '',
-      searchModeLabel: 'Tutti i luoghi',
+      ethicalError: null,
+      searchModeLabel: '',
+      lastCriteria: null,
       loading: false,
       evaluationLoading: false,
       error: null,
       services: {
         daas: 'checking',
         eaas: 'checking'
-      },
-      navItems: [
-        { id: 'explore', label: 'Esplora', icon: LayoutDashboard },
-        { id: 'evaluation', label: 'Valutazione', icon: FileCheck2 }
-      ]
+      }
     }
   },
   mounted() {
     this.checkServices()
-    this.loadAllPlaces()
   },
   methods: {
     serviceLabel(status) {
@@ -231,23 +215,8 @@ export default {
       this.services.daas = daas.status === 'fulfilled' ? 'online' : 'offline'
       this.services.eaas = eaas.status === 'fulfilled' ? 'online' : 'offline'
     },
-    async loadAllPlaces() {
-      this.loading = true
-      this.error = null
-      this.searchModeLabel = 'Catalogo completo'
-      this.selectedPlace = null
-
-      try {
-        const response = await axios.get(`${DAAS_BASE_URL}/places`)
-        this.places = response.data
-        this.selectedPlace = this.places[0] || null
-      } catch (err) {
-        this.error = this.extractError(err, 'Impossibile caricare il catalogo')
-      } finally {
-        this.loading = false
-      }
-    },
     async handleBasicSearch(criteria) {
+      this.lastCriteria = { mode: 'basic', ...criteria }
       await this.runSearch('Ricerca base', `${DAAS_BASE_URL}/places/search/basic`, {
         location: criteria.location,
         category: criteria.category,
@@ -255,6 +224,7 @@ export default {
       })
     },
     async handleEthicalSearch(criteria) {
+      this.lastCriteria = { mode: 'ethical', ...criteria }
       await this.runSearch('Filtri etici', `${DAAS_BASE_URL}/places/search/ethical`, {
         location: criteria.location,
         category: criteria.category,
@@ -269,18 +239,22 @@ export default {
       this.searchModeLabel = label
       this.selectedPlace = null
       this.ethicalDecision = null
+      this.ethicalError = null
 
       try {
         const response = await axios.get(url, { params })
         this.places = requestedCriteria
           ? response.data.map((place) => this.withRevisionFlag(place, requestedCriteria))
           : response.data
-        this.selectedPlace = this.places[0] || null
         if (this.places.length === 0) {
           this.error = 'Nessun luogo trovato con questi criteri.'
+          this.stage = 'search'
+        } else {
+          this.stage = 'results'
         }
       } catch (err) {
         this.error = this.extractError(err, 'Errore durante la ricerca')
+        this.stage = 'search'
       } finally {
         this.loading = false
       }
@@ -294,56 +268,41 @@ export default {
     },
     selectPlace(place) {
       this.selectedPlace = place
+      this.ethicalDecision = null
+      this.decisionSource = ''
+      this.ethicalError = null
+      this.stage = 'detail'
     },
-    async handleRecommendation(context) {
+    backToResults() {
+      this.stage = 'results'
+      this.ethicalDecision = null
+      this.ethicalError = null
+    },
+    backToSearch() {
+      this.stage = 'search'
+      this.places = []
+      this.selectedPlace = null
+      this.ethicalDecision = null
+      this.ethicalError = null
+      this.error = null
+    },
+    async handleEthicalReport() {
       if (!this.selectedPlace) return
       this.evaluationLoading = true
-      this.error = null
-
-      try {
-        const response = await axios.post(`${DAAS_BASE_URL}/recommendations/ethical-recommendation`, {
-          category: this.selectedPlace.category,
-          accessibility: this.selectedPlace.accessibility,
-          sustainability: this.selectedPlace.sustainabilityLevel,
-          minRating: this.selectedPlace.rating,
-          userContext: {
-            userId: `user_${Date.now()}`,
-            preferences: context.preferences,
-            accessibilityNeeds: context.accessibilityNeeds
-          }
-        })
-        this.ethicalDecision = response.data
-        this.decisionSource = 'Raccomandazione DaaS + EaaS'
-        this.activeView = 'evaluation'
-      } catch (err) {
-        this.error = this.extractError(err, 'Errore nella raccomandazione etica')
-      } finally {
-        this.evaluationLoading = false
-      }
-    },
-    async handleDirectEvaluation(context) {
-      if (!this.selectedPlace) return
-      this.evaluationLoading = true
-      this.error = null
+      this.ethicalError = null
 
       try {
         const response = await axios.post(`${EAAS_BASE_URL}/evaluate`, {
-          placeData: this.selectedPlace,
-          userContext: {
-            userId: `user_${Date.now()}`,
-            preferences: context.preferences,
-            accessibilityNeeds: context.accessibilityNeeds
-          }
+          placeData: this.selectedPlace
         })
         this.ethicalDecision = {
           ...response.data,
           placeName: response.data.placeName || this.selectedPlace.name,
           candidate: this.selectedPlace
         }
-        this.decisionSource = 'Valutazione diretta EaaS'
-        this.activeView = 'evaluation'
+        this.decisionSource = 'Valutazione EaaS'
       } catch (err) {
-        this.error = this.extractError(err, 'Errore nella valutazione EaaS')
+        this.ethicalError = this.extractError(err, 'Errore nella valutazione EaaS')
       } finally {
         this.evaluationLoading = false
       }

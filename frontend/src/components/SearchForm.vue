@@ -8,19 +8,11 @@
         <span class="eyebrow">Query DaaS</span>
         <h3>Ricerca turismo</h3>
       </div>
-      <button
-        class="icon-button"
-        type="button"
-        title="Carica catalogo completo"
-        @click="$emit('load-all')"
-      >
-        <ListRestart :size="18" />
-      </button>
     </div>
 
     <div class="field-grid">
       <label class="field">
-        <span><MapPin :size="15" /> Cerca</span>
+        <span><Type :size="15" /> Nome</span>
         <input
           v-model.trim="criteria.location"
           type="text"
@@ -124,44 +116,55 @@
 import {
   Accessibility,
   Leaf,
-  ListRestart,
   LoaderCircle,
-  MapPin,
   Search,
   Shapes,
   ShieldCheck,
-  Star
+  Star,
+  Type
 } from '@lucide/vue'
+
+const DEFAULT_CRITERIA = {
+  location: '',
+  category: 'All',
+  accessibility: 'WheelchairAccessible',
+  sustainability: 'Sustainable',
+  minRating: 4.0
+}
 
 export default {
   name: 'SearchForm',
   components: {
     Accessibility,
     Leaf,
-    ListRestart,
     LoaderCircle,
-    MapPin,
     Search,
     Shapes,
     ShieldCheck,
-    Star
+    Star,
+    Type
   },
   props: {
     loading: {
       type: Boolean,
       default: false
+    },
+    initialCriteria: {
+      type: Object,
+      default: null
     }
   },
-  emits: ['search-basic', 'search-ethical', 'load-all'],
+  emits: ['search-basic', 'search-ethical'],
   data() {
+    const init = this.initialCriteria || {}
     return {
-      mode: 'basic',
+      mode: init.mode || 'basic',
       criteria: {
-        location: '',
-        category: 'All',
-        accessibility: 'WheelchairAccessible',
-        sustainability: 'Sustainable',
-        minRating: 4.0
+        location: init.location ?? DEFAULT_CRITERIA.location,
+        category: init.category ?? DEFAULT_CRITERIA.category,
+        accessibility: init.accessibility ?? DEFAULT_CRITERIA.accessibility,
+        sustainability: init.sustainability ?? DEFAULT_CRITERIA.sustainability,
+        minRating: init.minRating ?? DEFAULT_CRITERIA.minRating
       }
     }
   },
