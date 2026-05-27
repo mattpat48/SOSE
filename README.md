@@ -56,7 +56,7 @@ SOSE/
 └── .gitignore
 ```
 
-## Build & Run Instructions
+## Build & Run Instructions (Individual Components)
 
 ### 1. Build Backend Services
 
@@ -90,58 +90,12 @@ Frontend will start on `http://localhost:5173`
 - DaaS: `curl http://localhost:8080/daas/api/places`
 - EaaS: `curl http://localhost:8081/eaas/api/evaluate/health`
 
-## Run and Test
+## Build & Run Instructions (Entire Project)
 
-Questa sezione fornisce i comandi rapidi e le verifiche per avviare e testare l'intero sistema.
-
-Prerequisiti:
-- Java JDK 17+ (`java -version`)
-- Maven 3.8+ (`mvn -v`) — su Debian/Ubuntu: `sudo apt install maven`
-- Node.js 16+ e `npm` o `yarn` (`node -v`, `npm -v`)
-
-Ordine di avvio consigliato:
-1. Avvia prima l'EaaS (motore di policy) su porta 8081.
-2. Avvia il DaaS su porta 8080 (fa richieste all'EaaS).
-3. Avvia il frontend (Vite) su 5173.
-
-Comandi rapidi (esegui nelle rispettive cartelle):
+Start everything with:
 ```bash
-# 1) Backend EaaS
-cd backend-eaas
-mvn clean package
-# in sviluppo: mvn spring-boot:run
-java -jar target/backend-eaas-0.0.1-SNAPSHOT.jar
-
-# 2) Backend DaaS
-cd ../backend-daas
-mvn clean package
-# in sviluppo: mvn spring-boot:run
-java -jar target/backend-daas-0.0.1-SNAPSHOT.jar
-
-# 3) Frontend (dev)
-cd ../frontend
-npm install
-npm run dev
+./run-all.sh
 ```
-
-Verifiche rapide (curl):
-```bash
-# Lista posti (DaaS)
-curl http://localhost:8080/daas/api/places
-
-# Ricerca per categoria
-curl "http://localhost:8080/daas/api/places/search/category/Museum"
-
-# Richiesta valutazione etica (DaaS orchestration -> EaaS)
-curl -X POST http://localhost:8080/daas/api/recommendations/ethical-recommendation \
-  -H "Content-Type: application/json" \
-  -d '{"placeId":"http://example.org/places/1"}'
-```
-
-Note di debug:
-- Se `mvn` non è trovato, installalo localmente o apri i progetti in IntelliJ/VSCode e usa la run configuration Maven.
-- Se DaaS segnala errori di connessione verso EaaS, assicurati che EaaS sia avviato sulla porta corretta prima di lanciare DaaS.
-- Per cambiare la porta all'avvio: `java -jar target/...jar --server.port=8082` o con Maven: `mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8082`.
 
 ## API Endpoints
 
