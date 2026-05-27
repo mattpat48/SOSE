@@ -5,8 +5,8 @@
       class="empty-detail"
     >
       <MapPinned :size="34" />
-      <h3>Seleziona un luogo</h3>
-      <p>I dettagli e il report etico appariranno qui.</p>
+      <h3>Select a place</h3>
+      <p>Details and the ethical report will appear here.</p>
     </div>
 
     <template v-else>
@@ -51,22 +51,22 @@
       <div class="detail-list">
         <div class="detail-row">
           <Accessibility :size="18" />
-          <span>Accessibilita</span>
+          <span>Accessibility</span>
           <strong>{{ place.accessibility || 'n/a' }}</strong>
         </div>
         <div class="detail-row">
           <Leaf :size="18" />
-          <span>Sostenibilita</span>
+          <span>Sustainability</span>
           <strong>{{ place.sustainabilityLevel || 'n/a' }}</strong>
         </div>
         <div class="detail-row">
           <DatabaseZap :size="18" />
-          <span>Fonte</span>
+          <span>Source</span>
           <strong>{{ place.provenance || 'n/a' }}</strong>
         </div>
         <div class="detail-row">
           <CalendarClock :size="18" />
-          <span>Aggiornato</span>
+          <span>Updated</span>
           <strong>{{ formatDate(place.lastUpdated) }}</strong>
         </div>
       </div>
@@ -86,7 +86,7 @@
           v-else
           :size="18"
         />
-        {{ ethicalDecision ? 'Rigenera Ethical Report' : 'Genera Ethical Report' }}
+        {{ ethicalDecision ? 'Regenerate Ethical Report' : 'Generate Ethical Report' }}
       </button>
 
       <div
@@ -190,7 +190,7 @@ export default {
       if (!dateString) return 'n/a'
       const date = new Date(dateString)
       if (Number.isNaN(date.getTime())) return dateString
-      return date.toLocaleDateString('it-IT', {
+      return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'

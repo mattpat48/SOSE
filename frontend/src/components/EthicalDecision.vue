@@ -6,8 +6,8 @@
     >
       <div>
         <span class="eyebrow">{{ source || 'EaaS' }}</span>
-        <h3>{{ decision.placeName || decision.candidate?.name || 'Valutazione etica' }}</h3>
-        <p>{{ decision.rationale || 'Nessuna motivazione disponibile.' }}</p>
+        <h3>{{ decision.placeName || decision.candidate?.name || 'Ethical evaluation' }}</h3>
+        <p>{{ decision.rationale || 'No rationale available.' }}</p>
       </div>
       <div class="decision-token">
         <component
@@ -39,7 +39,7 @@
 
     <section class="policy-section">
       <div class="section-heading">
-        <h4>Policy applicate</h4>
+        <h4>Applied policies</h4>
         <span>{{ policies.length }}</span>
       </div>
 
@@ -48,7 +48,7 @@
         class="state-block"
       >
         <FileQuestion :size="22" />
-        <span>Nessuna policy restituita.</span>
+        <span>No policies returned.</span>
       </div>
 
       <div
@@ -89,9 +89,9 @@
       >
         <div class="audit-row audit-head">
           <span>Policy</span>
-          <span>Condizione</span>
-          <span>Esito</span>
-          <span>Rischio</span>
+          <span>Condition</span>
+          <span>Result</span>
+          <span>Risk</span>
         </div>
         <div
           v-for="(trail, index) in auditTrail"

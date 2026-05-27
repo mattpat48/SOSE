@@ -2,7 +2,7 @@
   <div class="app-shell">
     <aside
       class="sidebar"
-      aria-label="Stato servizi"
+      aria-label="Service status"
     >
       <div class="brand">
         <div class="brand-mark">
@@ -31,7 +31,7 @@
           @click="checkServices"
         >
           <RefreshCcw :size="16" />
-          <span>Aggiorna servizi</span>
+          <span>Refresh services</span>
         </button>
       </div>
     </aside>
@@ -44,8 +44,8 @@
       >
         <div class="hero-copy">
           <span class="eyebrow">Tourism recommendation engine</span>
-          <h2>Cerca luoghi etici e sostenibili.</h2>
-          <p>Filtra per nome, categoria o rating. Apri il dettaglio di un luogo per generare l'Ethical Report.</p>
+          <h2>Find ethical and sustainable places.</h2>
+          <p>Filter by name, category or rating. Open a place detail to generate the Ethical Report.</p>
         </div>
 
         <SearchForm
@@ -76,7 +76,7 @@
             @click="backToSearch"
           >
             <ArrowLeft :size="18" />
-            <span>Nuova ricerca</span>
+            <span>New search</span>
           </button>
           <span class="eyebrow stage-label">{{ searchModeLabel }}</span>
           <span class="count-badge">{{ places.length }}</span>
@@ -91,7 +91,7 @@
               class="spin"
               :size="24"
             />
-            <span>Caricamento dati...</span>
+            <span>Loading data...</span>
           </div>
 
           <div
@@ -123,9 +123,9 @@
             @click="backToResults"
           >
             <ArrowLeft :size="18" />
-            <span>Torna ai risultati</span>
+            <span>Back to results</span>
           </button>
-          <span class="eyebrow stage-label">Dettaglio luogo</span>
+          <span class="eyebrow stage-label">Place detail</span>
         </header>
 
         <PlaceDetail
@@ -217,7 +217,7 @@ export default {
     },
     async handleBasicSearch(criteria) {
       this.lastCriteria = { mode: 'basic', ...criteria }
-      await this.runSearch('Ricerca base', `${DAAS_BASE_URL}/places/search/basic`, {
+      await this.runSearch('Basic search', `${DAAS_BASE_URL}/places/search/basic`, {
         location: criteria.location,
         category: criteria.category,
         minRating: criteria.minRating
@@ -225,7 +225,7 @@ export default {
     },
     async handleEthicalSearch(criteria) {
       this.lastCriteria = { mode: 'ethical', ...criteria }
-      await this.runSearch('Filtri etici', `${DAAS_BASE_URL}/places/search/ethical`, {
+      await this.runSearch('Ethical filters', `${DAAS_BASE_URL}/places/search/ethical`, {
         location: criteria.location,
         category: criteria.category,
         accessibility: criteria.accessibility,
@@ -247,13 +247,13 @@ export default {
           ? response.data.map((place) => this.withRevisionFlag(place, requestedCriteria))
           : response.data
         if (this.places.length === 0) {
-          this.error = 'Nessun luogo trovato con questi criteri.'
+          this.error = 'No places found with these criteria.'
           this.stage = 'search'
         } else {
           this.stage = 'results'
         }
       } catch (err) {
-        this.error = this.extractError(err, 'Errore durante la ricerca')
+        this.error = this.extractError(err, 'Error during search')
         this.stage = 'search'
       } finally {
         this.loading = false
@@ -300,9 +300,9 @@ export default {
           placeName: response.data.placeName || this.selectedPlace.name,
           candidate: this.selectedPlace
         }
-        this.decisionSource = 'Valutazione EaaS'
+        this.decisionSource = 'EaaS evaluation'
       } catch (err) {
-        this.ethicalError = this.extractError(err, 'Errore nella valutazione EaaS')
+        this.ethicalError = this.extractError(err, 'Error during EaaS evaluation')
       } finally {
         this.evaluationLoading = false
       }

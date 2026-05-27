@@ -5,25 +5,25 @@
   >
     <div class="panel-heading">
       <div>
-        <span class="eyebrow">Query DaaS</span>
-        <h3>Ricerca turismo</h3>
+        <span class="eyebrow">DaaS query</span>
+        <h3>Tourism search</h3>
       </div>
     </div>
 
     <div class="field-grid">
       <label class="field">
-        <span><Type :size="15" /> Nome</span>
+        <span><Type :size="15" /> Name</span>
         <input
           v-model.trim="criteria.location"
           type="text"
-          placeholder="Citta, luogo o descrizione"
+          placeholder="City, place or description"
         >
       </label>
 
       <label class="field">
-        <span><Shapes :size="15" /> Categoria</span>
+        <span><Shapes :size="15" /> Category</span>
         <select v-model="criteria.category">
-          <option value="All">Tutte</option>
+          <option value="All">All</option>
           <option value="Museum">Museum</option>
           <option value="Restaurant">Restaurant</option>
           <option value="NaturalSite">NaturalSite</option>
@@ -33,7 +33,7 @@
       </label>
 
       <label class="field">
-        <span><Star :size="15" /> Rating minimo</span>
+        <span><Star :size="15" /> Minimum rating</span>
         <input
           v-model.number="criteria.minRating"
           type="number"
@@ -47,7 +47,7 @@
     <div
       class="mode-row"
       role="group"
-      aria-label="Tipo di ricerca"
+      aria-label="Search type"
     >
       <button
         class="segment"
@@ -56,7 +56,7 @@
         @click="mode = 'basic'"
       >
         <Search :size="16" />
-        Base
+        Basic
       </button>
       <button
         class="segment"
@@ -65,7 +65,7 @@
         @click="mode = 'ethical'"
       >
         <ShieldCheck :size="16" />
-        Etica
+        Ethical
       </button>
     </div>
 
@@ -74,7 +74,7 @@
       class="ethical-fields"
     >
       <label class="field">
-        <span><Accessibility :size="15" /> Accessibilita</span>
+        <span><Accessibility :size="15" /> Accessibility</span>
         <select v-model="criteria.accessibility">
           <option value="WheelchairAccessible">WheelchairAccessible</option>
           <option value="PartiallyWheelchairAccessible">PartiallyWheelchairAccessible</option>
@@ -83,7 +83,7 @@
       </label>
 
       <label class="field">
-        <span><Leaf :size="15" /> Sostenibilita</span>
+        <span><Leaf :size="15" /> Sustainability</span>
         <select v-model="criteria.sustainability">
           <option value="HighlySustainable">HighlySustainable</option>
           <option value="Sustainable">Sustainable</option>
@@ -107,7 +107,7 @@
         v-else
         :size="18"
       />
-      Cerca luoghi
+      Search places
     </button>
   </form>
 </template>

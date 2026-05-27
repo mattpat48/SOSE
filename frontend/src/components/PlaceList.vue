@@ -5,7 +5,7 @@
       class="state-block"
     >
       <SearchX :size="24" />
-      <span>Nessun risultato disponibile.</span>
+      <span>No results available.</span>
     </div>
 
     <button
@@ -115,17 +115,17 @@ export default {
     },
     compactAccessibility(value) {
       return {
-        WheelchairAccessible: 'Accessibile',
-        PartiallyWheelchairAccessible: 'Parziale',
-        NotWheelchairAccessible: 'Limitata'
+        WheelchairAccessible: 'Accessible',
+        PartiallyWheelchairAccessible: 'Partial',
+        NotWheelchairAccessible: 'Limited'
       }[value] || value || 'n/a'
     },
     compactSustainability(value) {
       return {
-        HighlySustainable: 'Alta',
-        Sustainable: 'Buona',
-        ModeratelySustainable: 'Media',
-        LowSustainability: 'Bassa'
+        HighlySustainable: 'High',
+        Sustainable: 'Good',
+        ModeratelySustainable: 'Medium',
+        LowSustainability: 'Low'
       }[value] || value || 'n/a'
     },
     accessibilityClass(value) {
