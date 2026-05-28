@@ -28,6 +28,50 @@ fail() {
   exit 1
 }
 
+# Windows: auto-detect JDK 17+ and override JAVA_HOME if it points elsewhere.
+# Without this, Maven uses whatever JAVA_HOME is set to (often an older JDK
+# like jdk-11), and the build fails with "release version 17 not supported".
+if [[ "$OS" == "Windows_NT" || "$OSTYPE" =~ ^(msys|cygwin|mingw) ]]; then
+  echo "Windows detected: locating JDK 17+ ..."
+
+  CANDIDATES=(
+    "C:/Program Files/Java/jdk-21"
+    "C:/Program Files/Java/jdk-17"
+    "C:/Program Files/Eclipse Adoptium/jdk-21"
+    "C:/Program Files/Eclipse Adoptium/jdk-17"
+    "C:/Program Files/Microsoft/jdk-21"
+    "C:/Program Files/Microsoft/jdk-17"
+    "C:/Program Files/Zulu/zulu-17"
+    "C:/Program Files/Amazon Corretto/jdk17"
+  )
+
+  JDK_WIN=""
+  for c in "${CANDIDATES[@]}"; do
+    if [[ -x "$c/bin/java.exe" ]]; then
+      JDK_WIN="$c"
+      break
+    fi
+  done
+
+  [[ -n "$JDK_WIN" ]] || fail "JDK 17+ non trovato. Posizioni cercate: ${CANDIDATES[*]}"
+
+  # Maven on Windows wants a native path in JAVA_HOME; bash needs the Unix-style
+  # form for PATH so the right java.exe is found by command -v / which.
+  if command -v cygpath >/dev/null 2>&1; then
+    JAVA_HOME_NATIVE="$(cygpath -w "$JDK_WIN")"
+    JDK_UNIX="$(cygpath -u "$JDK_WIN")"
+  else
+    JAVA_HOME_NATIVE="${JDK_WIN//\//\\}"
+    JDK_UNIX="$JDK_WIN"
+  fi
+
+  export JAVA_HOME="$JAVA_HOME_NATIVE"
+  export PATH="$JDK_UNIX/bin:$PATH"
+
+  echo "  JAVA_HOME = $JAVA_HOME"
+  java -version 2>&1 | sed 's/^/  /'
+fi
+
 command -v mvn >/dev/null 2>&1 || fail "Maven (mvn) non trovato. Installa Maven e riprova."
 command -v node >/dev/null 2>&1 || fail "Node.js non trovato. Installa Node.js e riprova."
 
